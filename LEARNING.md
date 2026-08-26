@@ -1,8 +1,11 @@
 # Linux Learning Path — Zero to Guru
 
-An 8-week, 28-day training course for the `linux-sandbox` box. No prior
+A 9-week, 32-day training course for the `linux-sandbox` box. No prior
 Linux knowledge assumed beyond what you've already done in this
-project (SSH in, run `docker run`).
+project (SSH in, run `docker run`). Weeks 1-8 build the foundation on
+this box; Week 9 sends you out to fully complete three respected
+external platforms (OverTheWire Bandit, TryHackMe, KodeKloud) using
+nothing but what you've already learned — the real proof it stuck.
 
 **How each day works:**
 - **Do this** — the exact command(s) to type
@@ -620,6 +623,11 @@ expected, and a good sign you're past the easy part.
 minutes of genuine effort, it's worth reviewing here rather than just
 moving on once you've solved it.
 
+This is a 34-level wargame in total, and the plan across this course is
+to eventually finish all of it — the next chunk (19-25, networking-
+flavored) comes after Week 5, and the final push to level 34 is a
+dedicated goal in Week 9, once the whole foundation is in place.
+
 # Week 4 — Version Control & Services
 
 ## Day 13 — Git basics **(host)**
@@ -907,6 +915,20 @@ from a *second* terminal before closing your first one.
    a firewall on a remote box, and why?
 4. What does `dig` show you that `curl` doesn't?
 
+## 🔗 External checkpoint: OverTheWire Bandit, levels 19-25
+
+**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
+(continue from your saved progress)
+
+**Do this:** levels **19 to 25** lean heavily on networking — ports,
+`nc` (netcap), talking to services directly over a raw connection —
+exactly what Week 5 just covered. Some of these will take real
+persistence; that's normal at this depth.
+
+**Come back and tell me:** how it felt applying `ss`/networking
+concepts against a genuinely unfamiliar box, versus this sandbox where
+you already know what's running.
+
 # Week 6 — Docker Deep Dive
 
 ## Day 19 — Building your own images
@@ -1062,7 +1084,9 @@ setups than the nginx+redis demo from Day 21.
 **Do this:** work through whatever free Docker labs are currently
 available. This is intentionally open-ended — the goal is repetition
 and seeing Docker used in a slightly different style than this course's
-examples, not a specific checklist.
+examples, not a specific checklist. Week 9 comes back to this platform
+for a full pass through everything free it offers — this first visit
+is just to get oriented.
 
 **Come back and tell me:** one thing they did differently from how this
 course explained it — comparing explanations is a great way to make an
@@ -1177,7 +1201,7 @@ in the last hour, what would you check or do next, based on Days 18 and
 4. Name two log sources you'd check first if you suspected someone was
    trying to break into this box.
 
-## 🔗 External checkpoint: TryHackMe "Linux Fundamentals" + Bandit 19+
+## 🔗 External checkpoint: TryHackMe "Linux Fundamentals"
 
 **Go here:** [tryhackme.com](https://tryhackme.com/) — search for the
 "Linux Fundamentals" room path (has a free tier).
@@ -1185,16 +1209,15 @@ in the last hour, what would you check or do next, based on Days 18 and
 **What it is:** guided, more security-flavored Linux practice than
 Bandit — a natural next step now that Week 7's hardening/fail2ban/log
 material gives you the context to appreciate *why* the security-focused
-exercises matter, not just how to run the commands.
-
-**Also:** if you enjoyed Bandit earlier, level **19 onward**
-(overthewire.org/wargames/bandit) gets meaningfully harder and starts
-touching on things like SUID binaries and basic privilege escalation —
-a nice preview of security concepts beyond this course's scope.
+exercises matter, not just how to run the commands. This first visit is
+just to get started; Week 9 comes back to finish the whole path
+properly.
 
 **Come back and tell me:** how the security framing felt different from
 the purely "how do I use this tool" framing earlier in this course —
-that shift in mindset is the actual point of Week 7.
+that shift in mindset is the actual point of Week 7. Bandit's next
+stretch — level 26 onward, into real privilege-escalation territory —
+is waiting for you in Week 9.
 
 # Week 8 — Guru Capstones
 
@@ -1288,12 +1311,102 @@ how these pieces fit together in real infrastructure.
 
 ---
 
+---
+
+# Week 9 — External Mastery
+
+Everything up to here was building the foundation. These four days have
+no new material from this course — the whole point is that you no
+longer need it. Each one sends you to fully finish something you only
+sampled earlier, using nothing but skills you already have. This is
+where "completed the course" turns into "proven, outside this one box,
+that it actually stuck."
+
+## Day 29 — Finish OverTheWire Bandit, levels 26 through 34
+
+**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
+
+**Do this:** finish the wargame. This final stretch is genuinely hard —
+expect git repository archaeology, cron-based traps, private key
+recovery, and light privilege escalation. Take it slowly, level by
+level; some may take multiple sessions. That's expected, not a sign
+you're behind.
+
+**Come back and tell me:** which level was the hardest, and walk me
+through how you eventually solved it — explaining a solved problem out
+loud is one of the best ways to confirm you actually understood it
+(not just stumbled into the answer).
+
+**Self-check:** none — this one's genuinely unverifiable from here,
+self-report with `course.sh done 29` once you've reached level 34.
+
+---
+
+## Day 30 — Finish the TryHackMe "Linux Fundamentals" path
+
+**Go here:** [tryhackme.com](https://tryhackme.com/)
+
+**Do this:** complete every room in the Linux Fundamentals path, not
+just the first one you tried back in Week 7. Take notes on anything
+that used a tool or concept this course didn't cover — that's your own
+personal "next things to look up" list.
+
+**Come back and tell me:** what (if anything) came up that wasn't in
+this course at all — that's genuinely useful signal for what to add
+next.
+
+**Self-check:** none — mark it yourself with `course.sh done 30` once
+the path is complete.
+
+---
+
+## Day 31 — Finish the KodeKloud free Docker labs
+
+**Go here:** [kodekloud.com](https://kodekloud.com/)
+
+**Do this:** work through everything free their Docker catalog currently
+offers, start to finish — not just a sample this time. Pay particular
+attention to anything involving multi-stage builds, registries, or
+orchestration concepts that go beyond Week 6's Compose material.
+
+**Come back and tell me:** whether anything there changed how you'd
+approach the `Dockerfile` you wrote back on Day 19 — a good sign the
+extra practice actually taught you something new, not just repetition.
+
+**Self-check:** none — mark it yourself with `course.sh done 31`.
+
+---
+
+## Day 32 — Where to go from here (open-ended, optional)
+
+**Objective:** point yourself at what's next, now that the fundamentals
+are genuinely solid.
+
+If you want more of what Bandit gave you, OverTheWire has several other
+free wargames worth knowing about: **Natas** (web application security),
+**Leviathan** (beginner-friendly binary/exploitation basics), and
+**Krypton** (cryptography puzzles) are the natural next steps — all at
+the same site, same style, no signup.
+
+This day has no fixed exercise — it's a prompt to come back to a Claude
+session and talk through what genuinely interested you most across this
+whole course (security? automation? Docker/orchestration? networking?)
+so the *next* course can be scoped around that, the same way this one
+was scoped around "zero to guru" at the start.
+
+---
+
 ## After this
 
-You've now covered real sysadmin fundamentals end to end: shell,
-permissions, users, processes, packages, text wrangling, scripting with
-real error handling, git, backups, cron, systemd, networking,
-firewalls, Docker (including Compose), and security hardening — plus
-two real deployed capstones. Natural next directions: Ansible
-(automating server setup itself), a proper CI/CD pipeline, Kubernetes,
-or going deeper on any single week above. Ask when you get there.
+You've now covered real sysadmin fundamentals end to end — shell,
+permissions, environment variables, users, processes, packages, text
+wrangling, scripting with real error handling, git, backups, cron,
+systemd, networking, firewalls, Docker (including Compose), and
+security hardening — plus two real deployed capstones, and full
+completions of three respected external platforms (OverTheWire Bandit,
+TryHackMe Linux Fundamentals, KodeKloud Docker labs). That combination
+— built-here fundamentals *and* proven against material this project
+didn't write — is a genuinely solid, credible foundation. Natural next
+directions from here: Ansible (automating server setup itself), a
+proper CI/CD pipeline, Kubernetes, or one of the wargames from Day 32.
+Ask when you get there.
