@@ -50,6 +50,12 @@ When the curriculum changes (days added/renumbered/retitled), keep
 `course.sh`'s `TITLES` array in sync, update `provision.sh`/HANDOVER.md
 if the setup steps change, and re-deploy the whole `training/`
 directory to the instance (`scp` the changed files, then `chmod +x`).
+Also re-run `python tools/build_reference.py` to regenerate
+`training/course_reference.html` (the browsable HTML companion built
+from `LEARNING.md` — parser lives in `tools/build_reference.py`, flag
+cheatsheet data in `tools/flags_ref.py`, page shell/CSS/JS in
+`tools/template.html`) and re-publish it as an Artifact if the hosted
+copy should reflect the change too.
 
 This repo is under local git (no remote) — commit changes as they're
 made so nothing here is ever lost.

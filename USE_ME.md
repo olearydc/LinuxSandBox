@@ -93,6 +93,16 @@ world" context on every day tying it to actual incidents and practice.
 review. There's no deadline — go at 1 day a week if that's steadier;
 any day can be split across two sessions.
 
+**Prefer a browsable page to a markdown file?** There's an interactive
+HTML companion covering all 29 days — collapsible day cards, a 9-week
+roadmap diagram, and a full command/flag cheatsheet — published at
+https://claude.ai/code/artifact/6852001c-1dfe-4615-be06-e0f50a4ab6d1
+and also saved locally at `training/course_reference.html` (open it
+directly in any browser, no internet needed). It has its own local,
+this-browser-only checkbox tracker for convenience; the real source of
+truth is still `course.sh` on the instance. Regenerate it after editing
+`LEARNING.md` with `python tools/build_reference.py`.
+
 Track your progress with the built-in tracker, already set up on the
 instance:
 

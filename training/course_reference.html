@@ -1,0 +1,1527 @@
+<title>Zero to Guru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f2f5f3;
+    --surface:#ffffff;
+    --surface-2:#e9f0ed;
+    --text:#16211d;
+    --text-dim:#56645f;
+    --border:#d7e0db;
+    --accent:#0e7a68;
+    --accent-strong:#0a5f51;
+    --accent-soft:#e0f2ee;
+    --good:#1f8a56;
+    --warn:#b5790a;
+    --danger:#c1432f;
+    --host:#7a5cc9;
+    --host-soft:#efe9fb;
+    --term-bg:#101817;
+    --term-text:#dfeae6;
+    --term-prompt:#4fd6b8;
+    --term-comment:#7d918b;
+    --term-chrome:#1a2422;
+    --shadow: 0 1px 2px rgba(15,30,25,.06), 0 8px 24px -12px rgba(15,30,25,.18);
+    --font-display:'Space Mono', ui-monospace, 'SF Mono', monospace;
+    --font-body:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0c1412;
+      --surface:#121c19;
+      --surface-2:#182420;
+      --text:#dfe9e5;
+      --text-dim:#8ba39c;
+      --border:#22322c;
+      --accent:#3fd0b3;
+      --accent-strong:#63e0c8;
+      --accent-soft:rgba(63,208,179,.14);
+      --good:#4cc281;
+      --warn:#e0a83c;
+      --danger:#e56b5c;
+      --host:#b09af0;
+      --host-soft:rgba(176,154,240,.14);
+      --term-chrome:#0a100e;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0c1412;
+    --surface:#121c19;
+    --surface-2:#182420;
+    --text:#dfe9e5;
+    --text-dim:#8ba39c;
+    --border:#22322c;
+    --accent:#3fd0b3;
+    --accent-strong:#63e0c8;
+    --accent-soft:rgba(63,208,179,.14);
+    --good:#4cc281;
+    --warn:#e0a83c;
+    --danger:#e56b5c;
+    --host:#b09af0;
+    --host-soft:rgba(176,154,240,.14);
+    --term-chrome:#0a100e;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+  }
+  a{color:var(--accent-strong);}
+  code{
+    font-family:var(--font-mono);
+    background:var(--surface-2);
+    padding:.1em .35em;
+    border-radius:4px;
+    font-size:.9em;
+    color:var(--accent-strong);
+  }
+  ::selection{background:var(--accent-soft);}
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 280px minmax(0,1fr);
+    max-width:1320px;
+    margin:0 auto;
+  }
+  .sidebar{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 18px 40px 24px;
+    border-right:1px solid var(--border);
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:.02em;
+    margin-bottom:4px;
+  }
+  .brand .dot{color:var(--accent);}
+  .brand-sub{
+    font-size:.78rem;
+    color:var(--text-dim);
+    margin-bottom:20px;
+  }
+  .progress-box{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  .progress-count{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:1.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-count small{
+    font-size:.62em;
+    color:var(--text-dim);
+    font-weight:500;
+  }
+  .progress-track{
+    height:6px;
+    border-radius:99px;
+    background:var(--surface-2);
+    overflow:hidden;
+    margin-top:10px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent-strong));
+    width:0%;
+    transition:width .35s ease;
+  }
+  .progress-streak{
+    margin-top:8px;
+    font-size:.74rem;
+    color:var(--text-dim);
+  }
+  .nav-week{margin-bottom:16px;}
+  .nav-week-title{
+    font-family:var(--font-display);
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--text-dim);
+    margin-bottom:6px;
+    padding-left:4px;
+  }
+  .nav-day{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:5px 8px;
+    border-radius:6px;
+    font-size:.85rem;
+    color:var(--text);
+    text-decoration:none;
+    line-height:1.3;
+  }
+  .nav-day:hover{background:var(--surface-2);}
+  .nav-day.done{color:var(--text-dim); text-decoration:line-through; text-decoration-color:var(--border);}
+  .nav-daynum{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    color:var(--text-dim);
+    min-width:1.4em;
+    text-align:right;
+    flex:none;
+  }
+  .nav-flags-link{
+    display:block;
+    margin-top:6px;
+    padding:8px;
+    font-size:.8rem;
+    font-weight:600;
+    color:var(--accent-strong);
+    text-decoration:none;
+    border-top:1px solid var(--border);
+    padding-top:14px;
+  }
+  .theme-toggle{
+    margin-top:18px;
+    display:flex;
+    gap:6px;
+  }
+  .theme-toggle button{
+    flex:1;
+    font:inherit;
+    font-size:.72rem;
+    font-family:var(--font-mono);
+    padding:6px 4px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text-dim);
+    cursor:pointer;
+  }
+  .theme-toggle button.active{
+    border-color:var(--accent);
+    color:var(--accent-strong);
+    background:var(--accent-soft);
+  }
+
+  main{padding:0 40px 100px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:56px 0 30px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    font-family:var(--font-display);
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--accent-strong);
+    margin-bottom:14px;
+  }
+  h1.title{
+    font-family:var(--font-display);
+    font-size:clamp(2rem, 4.2vw, 3.1rem);
+    line-height:1.06;
+    margin:0 0 16px;
+    text-wrap:balance;
+    letter-spacing:-.01em;
+  }
+  .hero p.lede{
+    max-width:62ch;
+    color:var(--text-dim);
+    font-size:1.05rem;
+    margin:0 0 30px;
+  }
+  .hero p.lede strong{color:var(--text);}
+
+  /* roadmap diagram */
+  .roadmap{
+    overflow-x:auto;
+    padding-bottom:6px;
+    margin-bottom:6px;
+  }
+  .roadmap svg{display:block; min-width:920px;}
+  .roadmap-node-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+  }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    margin-top:26px;
+    font-size:.82rem;
+    color:var(--text-dim);
+  }
+  .legend span{display:flex; align-items:center; gap:7px;}
+  .legend .swatch{width:10px;height:10px;border-radius:3px;flex:none;}
+
+  /* ---------- week / day cards ---------- */
+  .week{margin-bottom:56px;}
+  .week-title{
+    font-family:var(--font-display);
+    font-size:1.5rem;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin:0 0 22px;
+    text-wrap:balance;
+  }
+  .week-eyebrow{
+    font-size:.72rem;
+    color:var(--accent-strong);
+    background:var(--accent-soft);
+    padding:4px 9px;
+    border-radius:99px;
+    letter-spacing:.04em;
+  }
+  .days{display:flex; flex-direction:column; gap:12px;}
+
+  details.day{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  details.day > summary{
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 18px;
+    font-family:var(--font-body);
+  }
+  details.day > summary::-webkit-details-marker{display:none;}
+  details.day > summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+  .day-check input{
+    width:18px;height:18px;
+    accent-color:var(--accent);
+    cursor:pointer;
+  }
+  .day-num{
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    color:var(--text-dim);
+    flex:none;
+  }
+  .day-title{
+    font-weight:600;
+    flex:1;
+    min-width:0;
+  }
+  details.day[open] .day-title{color:var(--accent-strong);}
+  .day-badges{display:flex; gap:6px; flex:none;}
+  .badge{
+    font-family:var(--font-mono);
+    font-size:.68rem;
+    padding:3px 8px;
+    border-radius:99px;
+    white-space:nowrap;
+  }
+  .badge-host{background:var(--host-soft); color:var(--host);}
+  .badge-container{background:var(--surface-2); color:var(--text-dim);}
+  .badge-bandit{background:var(--accent-soft); color:var(--accent-strong);}
+  .chev{
+    flex:none;
+    width:9px;height:9px;
+    border-right:2px solid var(--text-dim);
+    border-bottom:2px solid var(--text-dim);
+    transform:rotate(-45deg);
+    transition:transform .18s ease;
+    margin-right:2px;
+  }
+  details.day[open] .chev{transform:rotate(45deg);}
+
+  .day-body{
+    padding:4px 22px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    border-top:1px solid var(--border);
+    padding-top:18px;
+  }
+
+  .field p{margin:0 0 8px;}
+  .field p:last-child{margin-bottom:0;}
+  .field ul{margin:0; padding-left:1.2em;}
+  .field li{margin-bottom:8px;}
+  .field li:last-child{margin-bottom:0;}
+  .field-label{
+    font-family:var(--font-display);
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .field-objective .field-label{color:var(--accent-strong);}
+  .field-objective p{font-size:1.02rem; color:var(--text);}
+
+  .field-decode{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:14px 16px;
+    border:1px solid var(--border);
+  }
+  .field-decode .field-label::before{content:"⌕  ";}
+
+  .field-real{
+    border-left:3px solid var(--warn);
+    padding-left:14px;
+  }
+  .field-real .field-label{color:var(--warn);}
+
+  .field-apply{
+    background:var(--accent-soft);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .field-apply .field-label{color:var(--accent-strong);}
+
+  .field-optional{
+    border-left:3px solid var(--host);
+    padding-left:14px;
+    color:var(--text-dim);
+  }
+  .field-optional .field-label{color:var(--host);}
+
+  .field-check{
+    border:1px dashed var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .field-check .field-label::before{content:"?  ";}
+
+  .field-selfcheck code, .field-comeback code{color:var(--accent-strong);}
+  .field-important{
+    border-left:3px solid var(--danger);
+    padding-left:14px;
+  }
+  .field-important .field-label{color:var(--danger);}
+
+  blockquote{
+    margin:0;
+    border-left:3px solid var(--warn);
+    padding-left:14px;
+    color:var(--text-dim);
+    font-style:italic;
+  }
+
+  /* terminal window */
+  .term{
+    background:var(--term-bg);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .term-bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    background:var(--term-chrome);
+  }
+  .term-dot{width:8px;height:8px;border-radius:50%;background:#4a5a55;}
+  .term-lang{
+    margin-left:auto;
+    font-family:var(--font-mono);
+    font-size:.66rem;
+    color:var(--term-comment);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+  .term pre{
+    margin:0;
+    padding:14px 16px 16px;
+    overflow-x:auto;
+  }
+  .term code{
+    background:none;
+    padding:0;
+    color:var(--term-text);
+    font-size:.88rem;
+    line-height:1.65;
+    white-space:pre;
+  }
+
+  .review{
+    margin-top:22px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+  }
+  .review-label{
+    font-family:var(--font-display);
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent-strong);
+    margin-bottom:10px;
+  }
+  .review p{margin:0 0 8px;}
+  .review ol, .review ul{margin:8px 0 0; padding-left:1.3em;}
+  .review li{margin-bottom:6px;}
+
+  /* ---------- flags reference ---------- */
+  .flags-section{
+    margin:64px 0 40px;
+    padding-top:44px;
+    border-top:1px solid var(--border);
+  }
+  .flags-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:14px;
+    margin-top:26px;
+  }
+  .flag-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    box-shadow:var(--shadow);
+  }
+  .flag-card-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:10px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+  }
+  .flag-cmd{
+    font-size:.95rem;
+    font-weight:600;
+    background:none;
+    padding:0;
+    color:var(--text);
+  }
+  .flag-desc{font-size:.76rem; color:var(--text-dim);}
+  .flag-row{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:10px;
+    font-size:.82rem;
+    padding:4px 0;
+    align-items:baseline;
+  }
+  .flag-row code{white-space:nowrap;}
+  .flag-row span{color:var(--text-dim);}
+
+  footer.page-foot{
+    color:var(--text-dim);
+    font-size:.82rem;
+    padding-top:36px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .sidebar{
+      position:static;
+      height:auto;
+      border-right:none;
+      border-bottom:1px solid var(--border);
+    }
+    main{padding:0 20px 80px;}
+    .hero{padding-top:32px;}
+  }
+</style>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand"><span class="dot">$</span> zero-to-guru</div>
+    <div class="brand-sub">linux-sandbox reference workbook</div>
+
+    <div class="progress-box">
+      <div class="progress-count"><span id="doneCount">0</span>/<span id="totalCount">29</span> <small>days done</small></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-streak" id="streakLine">Check off a day as you finish it</div>
+    </div>
+
+    <div class="nav-week"><div class="nav-week-title">Week 1 · Shell Foundations</div><a href="#day-1" class="nav-day"><span class="nav-daynum">1</span>Finding your way around</a><a href="#day-2" class="nav-day"><span class="nav-daynum">2</span>Files, permissions, ownership</a><a href="#day-3" class="nav-day"><span class="nav-daynum">3</span>Text editors: nano and vim</a><a href="#day-4" class="nav-day"><span class="nav-daynum">4</span>Environment variables and <code>$PATH</code></a></div>
+<div class="nav-week"><div class="nav-week-title">Week 2 · Multi-User Linux</div><a href="#day-5" class="nav-day"><span class="nav-daynum">5</span>Users and groups</a><a href="#day-6" class="nav-day"><span class="nav-daynum">6</span>Processes</a><a href="#day-7" class="nav-day"><span class="nav-daynum">7</span>Installing software</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 3 · Text Wrangling &amp; Automation</div><a href="#day-8" class="nav-day"><span class="nav-daynum">8</span>Pipes, grep, and find</a><a href="#day-9" class="nav-day"><span class="nav-daynum">9</span>Regex basics with grep and sed</a><a href="#day-10" class="nav-day"><span class="nav-daynum">10</span>Shell scripting basics</a><a href="#day-11" class="nav-day"><span class="nav-daynum">11</span>Bash error handling: <code>set -e</code> and <code>trap</code></a><a href="#day-12" class="nav-day"><span class="nav-daynum">12</span>Scheduling with cron</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 4 · Version Control &amp; Services</div><a href="#day-13" class="nav-day"><span class="nav-daynum">13</span>Git basics</a><a href="#day-14" class="nav-day"><span class="nav-daynum">14</span>systemd and services</a><a href="#day-15" class="nav-day"><span class="nav-daynum">15</span>Write your own systemd service</a><a href="#day-16" class="nav-day"><span class="nav-daynum">16</span>Backups: <code>tar</code> and <code>rsync</code></a></div>
+<div class="nav-week"><div class="nav-week-title">Week 5 · Networking</div><a href="#day-17" class="nav-day"><span class="nav-daynum">17</span>Networking basics</a><a href="#day-18" class="nav-day"><span class="nav-daynum">18</span>Firewall</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 6 · Docker Deep Dive</div><a href="#day-19" class="nav-day"><span class="nav-daynum">19</span>Building your own images</a><a href="#day-20" class="nav-day"><span class="nav-daynum">20</span>Volumes and networks</a><a href="#day-21" class="nav-day"><span class="nav-daynum">21</span>Docker Compose: multi-container apps</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 7 · Security</div><a href="#day-22" class="nav-day"><span class="nav-daynum">22</span>SSH and basic hardening</a><a href="#day-23" class="nav-day"><span class="nav-daynum">23</span>fail2ban: automated intrusion protection</a><a href="#day-24" class="nav-day"><span class="nav-daynum">24</span>Reading the trail: logs and auditing</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 8 · Guru Capstones</div><a href="#day-25" class="nav-day"><span class="nav-daynum">25</span>Mini investigation</a><a href="#day-26" class="nav-day"><span class="nav-daynum">26</span>Capstone: deploy a real service</a><a href="#day-27" class="nav-day"><span class="nav-daynum">27</span>Capstone: WireGuard VPN</a><a href="#day-28" class="nav-day"><span class="nav-daynum">28</span>Capstone: tie it all together</a></div>
+<div class="nav-week"><div class="nav-week-title">Week 9 · Final Skills Test</div><a href="#day-29" class="nav-day"><span class="nav-daynum">29</span>One platform, no hand-holding</a></div>
+    <a href="#flags" class="nav-flags-link">⌘ Command &amp; flag reference</a>
+
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" data-theme-choice="light">Light</button>
+      <button type="button" data-theme-choice="dark">Dark</button>
+      <button type="button" data-theme-choice="system" class="active">Auto</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Linux Learning Path · linux-sandbox</div>
+      <h1 class="title">Zero to guru,<br>one terminal at a time.</h1>
+      <p class="lede">A 9-week, 29-day workbook: shell fundamentals through Docker, security, and a self-healing deployment — with a real <a href="https://overthewire.org/wargames/bandit/" target="_blank" rel="noopener">OverTheWire Bandit</a> level solved <strong>every single day</strong>, and one unassisted skills test at the end. This page mirrors <code>LEARNING.md</code> so you can work through it without a terminal-adjacent laptop.</p>
+
+      <div class="roadmap" aria-hidden="true">
+        <svg viewBox="0 0 980 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nine week roadmap">
+<line x1="60" y1="78" x2="920" y2="78" stroke="var(--border)" stroke-width="2" />
+<circle cx="60.0" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="60.0" cy="78" r="6" fill="var(--accent)" />
+<text x="60.0" y="52" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W1</text>
+<text x="60.0" y="66" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Shell Foundations</text>
+<text x="60.0" y="68" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">4 days</text>
+<circle cx="167.5" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="167.5" cy="78" r="6" fill="var(--accent)" />
+<text x="167.5" y="118" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W2</text>
+<text x="167.5" y="132" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Multi-User Linux</text>
+<text x="167.5" y="102" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">3 days</text>
+<circle cx="275.0" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="275.0" cy="78" r="6" fill="var(--accent)" />
+<text x="275.0" y="52" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W3</text>
+<text x="275.0" y="66" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Text Wrangling &amp; Automation</text>
+<text x="275.0" y="68" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">5 days</text>
+<circle cx="382.5" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="382.5" cy="78" r="6" fill="var(--accent)" />
+<text x="382.5" y="118" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W4</text>
+<text x="382.5" y="132" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Version Control &amp; Services</text>
+<text x="382.5" y="102" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">4 days</text>
+<circle cx="490.0" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="490.0" cy="78" r="6" fill="var(--accent)" />
+<text x="490.0" y="52" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W5</text>
+<text x="490.0" y="66" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Networking</text>
+<text x="490.0" y="68" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">2 days</text>
+<circle cx="597.5" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="597.5" cy="78" r="6" fill="var(--accent)" />
+<text x="597.5" y="118" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W6</text>
+<text x="597.5" y="132" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Docker Deep Dive</text>
+<text x="597.5" y="102" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">3 days</text>
+<circle cx="705.0" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="705.0" cy="78" r="6" fill="var(--accent)" />
+<text x="705.0" y="52" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W7</text>
+<text x="705.0" y="66" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Security</text>
+<text x="705.0" y="68" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">3 days</text>
+<circle cx="812.5" cy="78" r="16" fill="var(--accent)" opacity="0.16" />
+<circle cx="812.5" cy="78" r="6" fill="var(--accent)" />
+<text x="812.5" y="118" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W8</text>
+<text x="812.5" y="132" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Guru Capstones</text>
+<text x="812.5" y="102" text-anchor="middle" class="roadmap-node-label" fill="var(--accent)" font-size="9.5">4 days</text>
+<circle cx="920.0" cy="78" r="18" fill="var(--host)" opacity="0.16" />
+<circle cx="920.0" cy="78" r="6" fill="var(--host)" />
+<text x="920.0" y="52" text-anchor="middle" class="roadmap-node-label" fill="var(--text)" font-weight="700">W9</text>
+<text x="920.0" y="66" text-anchor="middle" class="roadmap-node-label" fill="var(--text-dim)" font-size="9.5">Final Skills Test</text>
+<text x="920.0" y="68" text-anchor="middle" class="roadmap-node-label" fill="var(--host)" font-size="9.5">1 day</text>
+</svg>
+      </div>
+
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--surface-2)"></span> practice inside a disposable container</span>
+        <span><span class="swatch" style="background:var(--host-soft)"></span> needs the real host machine</span>
+        <span><span class="swatch" style="background:var(--accent-soft)"></span> today's Bandit level</span>
+      </div>
+    </section>
+
+    <section class="week" id="week-1">
+  <h2 class="week-title"><span class="week-eyebrow">Week 1</span>Shell Foundations</h2>
+  <div class="days"><details class="day" id="day-1">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="1" aria-label="Mark Day 1 done"></span>
+    <span class="day-num">Day 1</span>
+    <span class="day-title">Finding your way around</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 0</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>move confidently and know how to get help instead of guessing.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>pwd
+ls -la
+man ls        # space to page, q to quit
+whoami
+id
+history</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>your current directory, a detailed file listing (including hidden dotfiles), a full manual page, your username, your user/group IDs, and a numbered list of everything you've typed.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>pwd</code>/<code>ls</code> are your eyes in a world with no file explorer window. <code>man</code> is the built-in reference for nearly every command — check here before searching online. <code>history</code> plus the <strong>up-arrow</strong> key means you almost never retype a command.</p></div>
+<div class="field field-decode"><div class="field-label">Decode it</div><div class="term" data-lang="text"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">text</span></div><pre><code>uid=1001(ubuntu) gid=1001(ubuntu) groups=1001(ubuntu),4(adm),24(cdrom),27(sudo),30(dip),105(lxd),988(docker)</code></pre></div>
+<ul><li><strong><code>uid=1001(ubuntu)</code></strong> — your numeric user ID is <code>1001</code>; the name <code>ubuntu</code> is just a label looked up from <code>/etc/passwd</code>. Everything under the hood is tracked by number, not name. <code>0</code> is always root; low numbers (roughly 1-999) are reserved for system/service accounts created automatically; real human accounts conventionally start at <code>1000</code>. So <code>1001</code> is a small clue that this was likely the <em>second</em> human account ever created on this box.</li><li><strong><code>gid=1001(ubuntu)</code></strong> — your primary group, confusingly also numbered and named the same as your user. That's Ubuntu's default "user private groups" behavior: every new user silently gets a same-named group as their primary one.</li><li><strong><code>groups=...</code></strong> — the <em>full</em> list: your primary group plus every extra group you belong to. Each one grants access to something specific — <code>sudo</code> is the important one (it's literally what allows you to run <code>sudo</code> at all — configured in <code>/etc/sudoers</code>); <code>docker</code> is the one added earlier in this project so you don't need <code>sudo</code> for Docker commands; <code>adm</code>, <code>cdrom</code>, <code>dip</code>, <code>lxd</code> are mostly Ubuntu defaults you're not actively using. This connects directly to Day 2 — group membership is exactly what gets checked whenever the system decides if you're allowed to read/write/execute something. <code>id</code> shows you the keys you're holding; a permissions check is the system testing whether one of your keys fits the lock.</li></ul>
+<p><code>history</code>'s numbers (e.g. <code>123  id</code>) are just a running count of commands typed this session — not meaningful on their own, but you can rerun a specific one with <code>!123</code> instead of retyping it.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p><code>man</code> pages have existed since Unix's first release in 1971 — even senior engineers reach for <code>man &lt;cmd&gt;</code> or a cheat-sheet constantly. Nobody memorizes every flag; knowing <em>how to look it up fast</em> is the actual skill.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p><a href="https://overthewire.org/wargames/bandit/" target="_blank" rel="noopener">Bandit level 0</a> — the connection details and starting password are right there on the page. This level is pure navigation, exactly what you just practiced. Solve it before moving on to Day 2.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>why does <code>.bashrc</code> show up in <code>ls -la</code> but not plain <code>ls</code>?</p></div>
+  </div>
+</details>
+<details class="day" id="day-2">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="2" aria-label="Mark Day 2 done"></span>
+    <span class="day-num">Day 2</span>
+    <span class="day-title">Files, permissions, ownership</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 1</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand exactly why <code>Permission denied</code> happens.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>touch file.txt
+ls -l file.txt
+chmod 000 file.txt
+ls -l file.txt
+useradd -m testuser
+su testuser -c &quot;cat file.txt&quot;</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>-rw-r--r--</code> initially, then <code>----------</code> after <code>chmod 000</code>, then <code>Permission denied</code> when <code>testuser</code> tries to read it (root ignores permission bits — that's <em>why</em> you need a second user to actually see a denial).</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>ls -l</code>'s 10-character string is <code>[type][owner][group][other]</code>, each triplet read/write/execute. <code>chmod</code> numbers are <code>read(4)+write(2)+execute(1)</code> added per triplet — <code>644</code> = owner read+write, everyone else read-only.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>misconfigured permissions are one of the most common real breach causes at scale — the 2017 Equifax breach and countless leaked cloud storage buckets over the years trace back to exactly this category of mistake: something readable/writable that shouldn't have been.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 1 — solve it using the password level 0 gave you. Figuring out what today's level actually needs <em>is</em> the exercise; that's true for every level from here on, so this instruction won't repeat it every day.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what chmod number gives the owner full access and everyone else nothing?</p></div>
+  </div>
+</details>
+<details class="day" id="day-3">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="3" aria-label="Mark Day 3 done"></span>
+    <span class="day-num">Day 3</span>
+    <span class="day-title">Text editors: nano and vim</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 2</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>edit files directly on the server — you'll need this for every day from here on, especially scripting.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>nano notes.txt</code></pre></div>
+<p>Type a line of text. At the bottom, <code>^O</code> means <code>Ctrl+O</code> (write out / save), <code>^X</code> means <code>Ctrl+X</code> (exit). Save and exit, then:</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cat notes.txt</code></pre></div></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>nano</code> shows its shortcuts on screen at all times — no memorization needed. Good enough for 90% of quick edits.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>vim notes2.txt</code></pre></div>
+<p>Vim has <strong>modes</strong> — this trips up everyone at first:</p>
+<ul><li>You start in <strong>Normal mode</strong> (keys are commands, not text)</li><li>Press <code>i</code> to enter <strong>Insert mode</strong> (now you can type text normally)</li><li>Press <code>Esc</code> to go back to Normal mode</li><li>Type <code>:wq</code> then <code>Enter</code> to <strong>w</strong>rite (save) and <strong>q</strong>uit</li><li>Type <code>:q!</code> then <code>Enter</code> to quit <strong>without</strong> saving (escape hatch if you get stuck — memorize this one first)</li></ul>
+<p><strong>Try this exact sequence:</strong> <code>vim notes2.txt</code>, press <code>i</code>, type <code>hello from vim</code>, press <code>Esc</code>, type <code>:wq</code>, press <code>Enter</code>.</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cat notes2.txt</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>hello from vim</code></p>
+<p><strong>A few more vim moves worth knowing:</strong></p>
+<ul><li><code>dd</code> (Normal mode) — delete the current line</li><li><code>u</code> — undo</li><li><code>/searchterm</code> then <code>Enter</code> — search in the file, <code>n</code> for next match</li><li><code>:%s/old/new/g</code> — replace every "old" with "new" in the whole file</li></ul></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>vim is installed on nearly every Linux server by default, unlike fancier editors — knowing at least <code>i</code>, <code>Esc</code>, <code>:wq</code>, and <code>:q!</code> means you're never stuck editing a config file on a random remote machine.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>the "vi vs emacs" editor rivalry dates back to the 1970s and is still a running joke in the field. The practical reason vim endures: it's preinstalled on nearly every Linux server on Earth, so knowing it means you're never stuck when GUI editors and mouse support simply aren't an option — which is most of the time on a remote server.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 2.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>you open a file in vim, make changes you didn't mean to make, and want to abandon them entirely. What do you type?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day3.sh</code> — confirms <code>notes.txt</code> and <code>notes2.txt</code> exist with the expected content.</p></div>
+  </div>
+</details>
+<details class="day" id="day-4">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="4" aria-label="Mark Day 4 done"></span>
+    <span class="day-num">Day 4</span>
+    <span class="day-title">Environment variables and <code>$PATH</code></span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 3</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand how the shell finds commands and stores settings — this explains a huge chunk of "why doesn't this work" bugs you'll hit for the rest of your Linux life.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>echo $HOME
+echo $PATH
+export MY_NAME=&quot;trainee&quot;
+echo $MY_NAME
+which ls</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>your home directory, a colon-separated list of directories, <code>trainee</code>, and the full path to the <code>ls</code> binary (something like <code>/usr/bin/ls</code>).</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>environment variables are named values available to your shell and anything it runs. <code>$PATH</code> is a special one: a list of directories the shell searches, in order, whenever you type a bare command name — that's literally how <code>which ls</code> finds it. <code>export</code> makes a variable visible to child processes too, not just your current shell.</p>
+<p><strong>Try this (safe to break — it only affects your current session):</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>PATH=&quot;&quot;
+ls</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>bash: ls: command not found</code> — even though the <code>ls</code> program is still sitting right there on disk. Close and reopen your terminal (or just log back in) to get a normal <code>$PATH</code> back.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>this proves <code>$PATH</code> — not the file's existence — is what makes a command findable by name. If <code>$PATH</code> doesn't include the folder a program lives in, typing its name fails, even though running it by full path (<code>/usr/bin/ls</code>) would still work fine.</p>
+<p><strong>Now make a variable persist across every future login:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>echo &#x27;export TRAINING_ENV=&quot;sandbox&quot;&#x27; &gt;&gt; ~/.bashrc
+source ~/.bashrc
+echo $TRAINING_ENV</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>sandbox</code></p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>.bashrc</code> runs every time you open a new shell — anything <code>export</code>ed there becomes permanent, not just for this session. <code>source</code> re-runs it immediately instead of waiting for your next login (this is exactly the trick used to activate the <code>docker</code> group and the login banner earlier in this project).</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>"command not found" despite software clearly being installed is one of the most common early points of confusion — the overwhelming majority of the time it's a <code>$PATH</code> problem, not a broken install.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 3 — a good reminder that not everything useful is visible with a plain <code>ls</code>.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>if you installed a program but typing its name gives <code>command not found</code>, what two things would you check first?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day4.sh</code></p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 1 review</div><p>Answer these from memory, no looking back. Bring your answers to a Claude session to talk through anything shaky — this is the point where slow-and-steady pays off, not a formality to skip.</p>
+<p>1. What do the 10 characters in <code>ls -l</code>'s permission string represent? 2. Why did <code>root</code> ignore the <code>chmod 000</code> you set on <code>file.txt</code>? 3. In vim, what's the fastest way to abandon changes and quit without saving? 4. What's the difference between Normal mode and Insert mode in vim? 5. What is <code>$PATH</code>, and what breaks if a directory isn't in it?</p>
+<p>By now you should be sitting on the password for <strong>Bandit level 4</strong> — if not, that's worth resolving before Week 2, not after.</p></div>
+</section>
+<section class="week" id="week-2">
+  <h2 class="week-title"><span class="week-eyebrow">Week 2</span>Multi-User Linux</h2>
+  <div class="days"><details class="day" id="day-5">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="5" aria-label="Mark Day 5 done"></span>
+    <span class="day-num">Day 5</span>
+    <span class="day-title">Users and groups</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 4</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand multi-user Linux for real.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cat /etc/passwd | tail -5
+sudo useradd -m -s /bin/bash trainee
+sudo groupadd learners
+sudo usermod -aG learners trainee
+id trainee</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>uid=1001(trainee) gid=1001(trainee) groups=1001(trainee),1002(learners)</code></p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>every account lives in <code>/etc/passwd</code>. <code>-m</code> creates a home directory, <code>-aG</code> <strong>appends</strong> to a group without wiping existing memberships (<code>-G</code> without <code>-a</code> would wipe them — a classic mistake). This is the exact pattern used to add <code>ubuntu</code> to the <code>docker</code> group earlier in this project.</p></div>
+<div class="field field-decode"><div class="field-label">Decode it</div><p>this reads exactly like your own <code>id</code> output from Day 1 — <code>trainee</code>'s primary group (<code>gid</code>) is its own private group (Ubuntu's default behavior for every new user), and <code>groups</code> lists that primary group plus every extra one it's in. Your actual uid number for <code>trainee</code> will just be "next available" on this box, so it may not match the example above exactly — that's normal, the <em>shape</em> of the output is what matters, same as every day in this course.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>mismanaged group/permission grants are a recurring theme in real intrusions and internal data leaks — someone gets added to a group "just for now" that never gets revoked, or a script overwrites a group list instead of appending to it (exactly what <code>-aG</code> protects against) and quietly strips someone's real access.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 4.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>why <code>-aG</code> and not just <code>-G</code>?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day5.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-6">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="6" aria-label="Mark Day 6 done"></span>
+    <span class="day-num">Day 6</span>
+    <span class="day-title">Processes</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 5</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>see what's running and control it.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>ps aux | head -10
+sleep 300 &amp;
+jobs
+kill %1
+jobs</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>a process table, a backgrounded job, then <code>Terminated</code> after <code>kill</code>.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>&amp;</code> backgrounds a command. <code>jobs</code> lists background jobs from <em>this shell</em>; <code>ps aux</code> lists <em>everything</em> on the system. <code>%1</code> refers to job number 1 from <code>jobs</code> — <code>kill</code> also accepts a raw PID. <code>kill</code> asks nicely by default; <code>kill -9</code> forces it, for when a process won't respond to the polite request.</p></div>
+<div class="field field-decode"><div class="field-label">Decode it</div><p><code>USER</code> (who owns the process), <code>PID</code> (its unique ID — this is what <code>kill</code> targets), <code>%CPU</code> / <code>%MEM</code> (current resource usage), <code>VSZ</code>/<code>RSS</code> (memory size details, rarely needed day to day), <code>TTY</code> (which terminal it's attached to, or <code>?</code> if none), <code>STAT</code> (state — <code>S</code> sleeping, <code>R</code> running, <code>Z</code> a "zombie" that's finished but not yet cleaned up), <code>START</code> (when it began), <code>TIME</code> (actual CPU time used, not wall-clock time), and finally <code>COMMAND</code> — the actual command line that started it, which is usually what you're scanning for.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>Knight Capital's infamous 2012 trading incident — a $440M loss in 45 minutes — was partly caused by an old process that should never have still been running getting triggered against live production. "What's actually running right now, and should it be" is a genuinely load-bearing question in production systems, not just a sandbox exercise.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 5.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>when might <code>kill &lt;pid&gt;</code> (no <code>-9</code>) fail to stop something?</p></div>
+  </div>
+</details>
+<details class="day" id="day-7">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="7" aria-label="Mark Day 7 done"></span>
+    <span class="day-num">Day 7</span>
+    <span class="day-title">Installing software</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 6</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>get fluent with the package manager.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo apt update
+sudo apt install -y cowsay
+cowsay &quot;hello sandbox&quot;
+which cowsay
+dpkg -L cowsay | head -5</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>cowsay's ASCII output, its install path, and a list of every file the package owns.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>apt update</code> refreshes the <em>list</em> of available versions — it installs nothing by itself. <code>apt install</code> does the actual work. <code>dpkg -L</code> shows that "installing a package" really means "copy files to specific places and record it."</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>software supply-chain attacks — malicious packages slipped into trusted repositories, like the 2024 <code>xz-utils</code> backdoor that nearly compromised SSH across huge swaths of the internet — exploit exactly the trust you place in <code>apt install</code>. Every install is you trusting that the maintainer's code does what it says.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 6.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what's the difference between <code>apt remove cowsay</code> and <code>apt purge cowsay</code>?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day7.sh</code></p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 2 review</div><p>1. What's the difference between <code>usermod -G</code> and <code>usermod -aG</code>, and why does it matter? 2. What does <code>&amp;</code> do to a command, and how is that different from a process just running normally in your terminal? 3. What's the difference between <code>kill &lt;pid&gt;</code> and <code>kill -9 &lt;pid&gt;</code>? 4. What does <code>apt update</code> actually do — and what does it <em>not</em> do? 5. What's the difference between <code>apt remove</code> and <code>apt purge</code>?</p>
+<p>You should be holding the password for <strong>Bandit level 7</strong> by now.</p></div>
+</section>
+<section class="week" id="week-3">
+  <h2 class="week-title"><span class="week-eyebrow">Week 3</span>Text Wrangling &amp; Automation</h2>
+  <div class="days"><details class="day" id="day-8">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="8" aria-label="Mark Day 8 done"></span>
+    <span class="day-num">Day 8</span>
+    <span class="day-title">Pipes, grep, and find</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 7</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>combine small tools instead of memorizing giant ones.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>ps aux &gt; processes.txt
+grep bash processes.txt
+wc -l processes.txt
+find / -maxdepth 2 -name &quot;*.conf&quot; 2&gt;/dev/null</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>filtered lines containing "bash", a line count, and a list of <code>.conf</code> files found by searching the filesystem.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>&gt;</code> redirects output to a file; <code>|</code> (used on Day 1 implicitly, now explicitly) pipes one command's output into another's input. <code>grep pattern file</code> filters lines matching a pattern — it also works as <code>cmd | grep pattern</code> on live output. <code>find</code> searches the filesystem by name, type, size, age, and more — <code>2&gt;/dev/null</code> throws away "permission denied" noise from folders you can't read.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>"small tools, piped together" is literally named the Unix Philosophy (formalized in the late 1970s) and it's still exactly how most real log analysis and incident response happens today, decades later — nobody writes one giant program to investigate a production issue, they chain <code>grep</code>, <code>awk</code>, <code>sort</code>, <code>uniq</code> together live.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 7 — <code>grep</code> earns its place here.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>write one line, using a pipe, that tells you how many processes are currently running — without creating a file.</p></div>
+  </div>
+</details>
+<details class="day" id="day-9">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="9" aria-label="Mark Day 9 done"></span>
+    <span class="day-num">Day 9</span>
+    <span class="day-title">Regex basics with grep and sed</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 8</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>search and replace by <em>pattern</em>, not just exact text.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>printf &quot;cat\nbat\ncar\ndog\n&quot; &gt; animals.txt
+grep &quot;^c&quot; animals.txt
+grep &quot;at$&quot; animals.txt
+grep -E &quot;c(a|o)t&quot; animals.txt
+sed &#x27;s/cat/CAT/&#x27; animals.txt</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>lines starting with <code>c</code> (cat, car), lines ending in "at" (cat, bat), lines matching "cat" or "cot" pattern (cat), and the file printed with "cat" replaced by "CAT" (the file itself isn't changed unless you add <code>-i</code>).</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>^</code> anchors to the start of a line, <code>$</code> to the end. <code>-E</code> enables "extended" regex so <code>|</code> (alternation) and <code>()</code> (grouping) work without extra backslashes. <code>sed 's/find/replace/'</code> substitutes the first match per line; add a trailing <code>g</code> to replace every match, and <code>-i</code> to edit the file in place instead of just printing the result.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>Cloudflare had a 27-minute <em>global</em> outage in 2019 caused by a single catastrophically slow regular expression deployed to their edge network (a "ReDoS" — regex denial of service). Regex is genuinely powerful and genuinely dangerous when careless — worth respecting, not just memorizing syntax for.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 8.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what would <code>sed -i 's/cat/CAT/g' animals.txt</code> do differently from the command above?</p></div>
+  </div>
+</details>
+<details class="day" id="day-10">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="10" aria-label="Mark Day 10 done"></span>
+    <span class="day-num">Day 10</span>
+    <span class="day-title">Shell scripting basics</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 9</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>write it once, run it forever.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><p>using <code>vim</code> or <code>nano</code> from Day 3, create <code>~/training/myscript.sh</code> <strong>(host, so it persists for the self-check)</strong>:</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>#!/bin/bash
+echo &quot;Starting setup...&quot;
+mkdir -p demo
+touch demo/one.txt demo/two.txt demo/three.txt
+echo &quot;Created $(ls demo | wc -l) files in ./demo&quot;</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>chmod +x ~/training/myscript.sh
+~/training/myscript.sh</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><div class="term" data-lang="text"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">text</span></div><pre><code>Starting setup...
+Created 3 files in ./demo</code></pre></div></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>#!/bin/bash</code> (the "shebang") tells the OS which interpreter runs the file. <code>chmod +x</code> grants execute permission (Day 2). <code>$(...)</code> substitutes a command's output inline.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>small internal bash scripts exactly like this one quietly run a huge amount of real infrastructure — deployment steps, cleanup jobs, "glue" between systems — at literally every tech company. It's rarely glamorous, but it's genuinely everywhere.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 9.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what error would you get running the script <em>without</em> <code>chmod +x</code> first?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day10.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-11">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="11" aria-label="Mark Day 11 done"></span>
+    <span class="day-num">Day 11</span>
+    <span class="day-title">Bash error handling: <code>set -e</code> and <code>trap</code></span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 10</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>make scripts fail loudly and predictably instead of quietly limping on after something breaks.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><p>create <code>~/training/risky.sh</code>:</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>#!/bin/bash
+mkdir /this/path/does/not/exist
+echo &quot;This line still runs even though the mkdir above failed!&quot;</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>chmod +x ~/training/risky.sh
+~/training/risky.sh</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>the <code>mkdir</code> error printed, <strong>and then</strong> the echo line prints anyway — proving bash just plows ahead after a failure by default.</p>
+<p><strong>Now create <code>~/training/safe_script.sh</code>:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>#!/bin/bash
+set -e
+mkdir /this/path/does/not/exist
+echo &quot;This line should never print&quot;</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>chmod +x ~/training/safe_script.sh
+~/training/safe_script.sh</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>just the error — the script stops immediately, the echo line never runs.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>set -e</code> tells bash to stop the entire script the instant any command fails (returns a non-zero exit code), instead of logging the error and continuing. This turns silent partial failures into loud, immediate, obvious ones.</p>
+<p><strong>One more piece — <code>trap</code>:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>#!/bin/bash
+set -e
+trap &#x27;echo &quot;Something failed on line $LINENO&quot;&#x27; ERR
+mkdir /this/path/does/not/exist</code></pre></div></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>trap</code> runs a command automatically when a condition occurs — here, <code>ERR</code> fires whenever a command fails. This is a small taste of the same idea behind real alerting systems: don't just fail, <em>say something</em> when you fail.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>unchecked failures inside deployment scripts have caused real production outages — one step silently fails, the script barrels on as if nothing happened, and the system ends up in a half-updated, broken state. <code>set -e</code> (and its stricter cousin <code>set -euo pipefail</code>) is close to a default best practice for any bash script that matters.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 10 — a good moment to <code>man</code> an encoding tool you haven't used yet rather than guessing.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what's the practical difference in behavior between <code>risky.sh</code> and <code>safe_script.sh</code>, and why would that matter for a real deployment script?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day11.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-12">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="12" aria-label="Mark Day 12 done"></span>
+    <span class="day-num">Day 12</span>
+    <span class="day-title">Scheduling with cron</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 11</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>make something run automatically, without you.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>crontab -l
+echo &#x27;* * * * * echo &quot;cron ran at $(date)&quot; &gt;&gt; ~/training/cron_log.txt&#x27; | crontab -</code></pre></div>
+<p>Wait about a minute, then:</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cat ~/training/cron_log.txt</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>an empty crontab initially (<code>no crontab for ubuntu</code>), then, after waiting, one or more lines showing the current time — proof it ran on its own.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code><em> </em> <em> </em> <em></code> means "every minute" — the five fields are minute, hour, day-of-month, month, day-of-week; <code></em></code> means "any." <code>crontab -l</code> lists your current schedule; piping into <code>crontab -</code> replaces it. This is how you'd automate backups, cleanup scripts, or health checks on a real server.</p></div>
+<div class="field field-important"><div class="field-label">Important</div><p>, or it'll spam that file forever:</p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>crontab -r</code></pre></div></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>an old, forgotten cron-style job is a recurring root cause behind real production incidents — something scheduled years ago, nobody remembers why, that eventually fires against a system that's since changed underneath it. Knowing exactly what's scheduled (<code>crontab -l</code>) and cleaning up after yourself, like you're about to, is a genuine habit worth keeping.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 11.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what would <code>0 3 <em> </em> <em></code> mean instead of <code></em> <em> </em> <em> </em></code>?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day12.sh</code> (run it <em>before</em> <code>crontab -r</code>, while the job is still active, to see it confirmed)</p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 3 review</div><p>1. What's the difference between <code>&gt;</code> and <code>|</code>? 2. Write, from memory, a <code>grep</code> pattern that matches lines starting with "err" (case doesn't matter for this — just the anchor). 3. What does the <code>g</code> flag do at the end of a <code>sed 's/.../.../ g'</code> command that's missing without it? 4. What does the shebang line (<code>#!/bin/bash</code>) actually do? 5. What does <code>set -e</code> change about how a script behaves after a command fails? 6. In a cron schedule <code><em> </em> <em> </em> *</code>, what do the five fields mean, in order?</p>
+<p>You should be holding the password for <strong>Bandit level 12</strong> — this next stretch (12-15 or so) gets noticeably harder and often involves decompressing files through several layers. Take your time.</p></div>
+</section>
+<section class="week" id="week-4">
+  <h2 class="week-title"><span class="week-eyebrow">Week 4</span>Version Control &amp; Services</h2>
+  <div class="days"><details class="day" id="day-13">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="13" aria-label="Mark Day 13 done"></span>
+    <span class="day-num">Day 13</span>
+    <span class="day-title">Git basics</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 13</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>track changes to files over time — the exact tool this project's own docs and scripts are managed with.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>mkdir -p ~/training/git-practice &amp;&amp; cd ~/training/git-practice
+git init
+git config --global user.email &quot;you@example.com&quot;
+git config --global user.name &quot;Trainee&quot;
+echo &quot;hello git&quot; &gt; notes.txt
+git add notes.txt
+git commit -m &quot;first commit&quot;
+git log --oneline</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>an "initialized empty Git repository" message, then a log with one line like <code>a1b2c3d first commit</code>.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>git init</code> creates a new repository (a hidden <code>.git</code> folder tracking history). <code>git add</code> <strong>stages</strong> a file — marks it to be included in the <em>next</em> commit. <code>git commit</code> actually saves a snapshot with a message. <code>git log</code> shows the history of snapshots. This exact workflow — init, add, commit — is how the <code>linux-sandbox</code> project's own docs and scripts are tracked, right on your local machine.</p>
+<p><strong>Try it — see history in action:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>echo &quot;a second line&quot; &gt;&gt; notes.txt
+git status
+git diff
+git add notes.txt
+git commit -m &quot;add a second line&quot;
+git log --oneline</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>git status</code> flags the file as modified, <code>git diff</code> shows exactly what changed (a <code>+</code> line), and after committing, <code>git log</code> now shows two commits.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>version control is arguably the single most universally used tool in professional software work — from a two-person side project to a company with thousands of engineers, nearly everything gets tracked this way. Git specifically was created in 2005 by Linus Torvalds — the same person who created Linux itself.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 13.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what's the difference between <code>git add</code> and <code>git commit</code>? Why are they two separate steps instead of one?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day13.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-14">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="14" aria-label="Mark Day 14 done"></span>
+    <span class="day-num">Day 14</span>
+    <span class="day-title">systemd and services</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 14</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand how background services are managed for real — what's keeping <code>sshd</code> and <code>docker</code> alive.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>systemctl status docker
+sudo journalctl -u docker -n 20
+systemctl is-enabled docker
+systemctl is-active docker</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>Active: active (running)</code>, recent log lines from just that service, and <code>enabled</code> / <code>active</code>.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>systemd starts, stops, and supervises services. "Enabled" (starts on boot) and "active" (running right now) are independent facts — confusing them causes real "but it worked yesterday!" bugs. <code>journalctl -u &lt;service&gt;</code> filters logs to just one service.</p></div>
+<div class="field field-decode"><div class="field-label">Decode it</div><p>the <code>●</code> symbol at the top is a quick health indicator (green/filled = fine, red = a problem). <code>Loaded:</code> shows where its unit file lives and whether it's <code>enabled</code>. <code>Active: active (running) since ...</code> is the line to check first — it tells you both <em>whether</em> it's up and <em>how long</em> it's been up (a service that restarted 30 seconds ago after running fine for weeks is a strong clue something just went wrong). <code>Main PID:</code> links it back to the <code>ps aux</code>/<code>PID</code> concept from Day 6 — a service is, under the hood, just a process systemd is supervising. Below that, a handful of the most recent log lines are shown inline, so you often don't even need <code>journalctl</code> separately for a quick check.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>systemd became the default init system across nearly every major Linux distribution by the mid-2010s (not without controversy) specifically because "is my service actually running, and will it restart itself if it dies" needed a real, reliable answer — silent service death used to be a genuinely common, hard-to-diagnose cause of downtime.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 14.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>if you ran <code>sudo systemctl disable docker</code> right now, would Docker stop immediately?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day14.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-15">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="15" aria-label="Mark Day 15 done"></span>
+    <span class="day-num">Day 15</span>
+    <span class="day-title">Write your own systemd service</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 15</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>go from <em>using</em> services to <em>creating</em> one.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><p>create <code>/etc/systemd/system/heartbeat.service</code> (needs <code>sudo</code> + an editor, e.g. <code>sudo vim ...</code>):</p>
+<div class="term" data-lang="ini"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">ini</span></div><pre><code>[Unit]
+Description=Heartbeat training service
+
+[Service]
+ExecStart=/bin/bash -c &#x27;while true; do echo &quot;beat $(date)&quot; &gt;&gt; /home/ubuntu/training/heartbeat.log; sleep 5; done&#x27;
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now heartbeat
+sleep 12
+sudo systemctl status heartbeat
+cat ~/training/heartbeat.log</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>Active: active (running)</code> and a few "beat ..." lines appearing every 5 seconds.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>a unit file describes a service: what to run (<code>ExecStart</code>), whether to restart it if it dies (<code>Restart=always</code>), and when to start it automatically (<code>WantedBy=multi-user.target</code> = normal boot). <code>daemon-reload</code> tells systemd to notice the new file; <code>enable --now</code> both enables it for next boot <em>and</em> starts it now.</p>
+<p><strong>Clean up when done exploring:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo systemctl disable --now heartbeat
+sudo rm /etc/systemd/system/heartbeat.service
+sudo systemctl daemon-reload</code></pre></div></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p><code>Restart=always</code> is a small taste of "self-healing" infrastructure — the same underlying idea (if it dies, bring it back automatically, without a human) scales all the way up to what Kubernetes does for entire fleets of containers in production.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 15.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what does <code>Restart=always</code> protect against that a plain script run by hand doesn't?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day15.sh</code> (run while the service is still active, before cleanup)</p></div>
+  </div>
+</details>
+<details class="day" id="day-16">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="16" aria-label="Mark Day 16 done"></span>
+    <span class="day-num">Day 16</span>
+    <span class="day-title">Backups: <code>tar</code> and <code>rsync</code></span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 16</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>know how to actually protect and recover data — not just create it.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>mkdir -p ~/important-data
+echo &quot;precious file&quot; &gt; ~/important-data/file1.txt
+tar -czvf ~/training/backup-$(date +%Y%m%d).tar.gz -C ~ important-data
+ls -lh ~/training/backup-*.tar.gz</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>tar</code>'s verbose file listing while it archives, then your <code>.tar.gz</code> file listed with its size.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>tar</code> bundles files/directories into one archive. <code>-c</code> create, <code>-z</code> gzip-compress, <code>-v</code> verbose (list files as it works), <code>-f</code> the output filename. <code>-C ~</code> tells tar to change into your home directory <em>first</em>, so the archive stores a clean relative <code>important-data/</code> path instead of an ugly absolute one.</p>
+<p><strong>Now prove the backup actually works — restore it:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>rm -rf ~/important-data
+tar -xzvf ~/training/backup-*.tar.gz -C ~
+cat ~/important-data/file1.txt</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>precious file</code> printed — proof the backup was real and restorable, not just something that ran without erroring.</p>
+<p><strong>One more tool — <code>rsync</code>, for syncing instead of archiving:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>mkdir -p ~/important-data-copy
+rsync -av ~/important-data/ ~/important-data-copy/
+ls ~/important-data-copy/</code></pre></div></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>rsync</code> copies efficiently, transferring only what's changed on repeat runs — this is the tool real backup systems and deployment pipelines use under the hood, not a copy-paste toy. <code>-a</code> = archive mode (preserves permissions and timestamps), <code>-v</code> = verbose.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>"we had backups, but never actually tested restoring them" is a genuinely common and painful lesson learned the hard way — a backup you haven't tested restoring isn't a real backup. You just did both halves, in the right order.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 16 — this one involves connecting to a range of ports to find the right one; <code>nc</code> or <code>openssl s_client</code> are worth reading up on if you haven't used them yet.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>why did this exercise have you delete <code>important-data</code> and restore it from the archive, instead of just trusting that the <code>tar</code> command exited without an error?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day16.sh</code></p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 4 review</div><p>1. What's the difference between <code>git add</code> and <code>git commit</code>? 2. What's the difference between a service being "enabled" and being "active"? 3. In a systemd unit file, what does <code>Restart=always</code> actually protect against? 4. Why does a backup you've never tested restoring not really count as a backup? 5. What's the practical difference between <code>tar</code> and <code>rsync</code>?</p>
+<p>You should be holding the password for <strong>Bandit level 17</strong>.</p></div>
+</section>
+<section class="week" id="week-5">
+  <h2 class="week-title"><span class="week-eyebrow">Week 5</span>Networking</h2>
+  <div class="days"><details class="day" id="day-17">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="17" aria-label="Mark Day 17 done"></span>
+    <span class="day-num">Day 17</span>
+    <span class="day-title">Networking basics</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 17</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand what's happening when you SSH in or a container reaches the internet.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>ip addr
+sudo ss -tulpn
+curl -I https://example.com
+dig example.com</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>this machine's interfaces and IPs, a table of listening ports (you'll recognize <code>:22</code> from <code>sshd</code>), an HTTP response header block, and a DNS answer resolving the domain to an IP.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>the public IP you SSH to isn't actually configured <em>on</em> this box — Oracle's network translates it to the private IP you see in <code>ip addr</code>. <code>ss -tulpn</code> is the exact command used early in this project to work out what the pre-existing <code>vpn-server</code> box was running, just from its open ports. <code>dig</code> shows the name→IP lookup that happens <em>before</em> any connection.</p></div>
+<div class="field field-decode"><div class="field-label">Decode it</div><ul><li><strong><code>ip addr</code></strong> — look for <code>ens3</code> (or similar): <code>inet 10.0.0.x/24</code> is this machine's own private IP and subnet size. <code>lo</code> is the "loopback" interface, always <code>127.0.0.1</code> — a machine's way of talking to itself, used constantly by services on the same box.</li><li><strong><code>ss -tulpn</code></strong> columns: <code>Netid</code> (<code>tcp</code> or <code>udp</code>), <code>State</code> (<code>LISTEN</code> = accepting connections), <code>Local Address:Port</code> — this is the one to actually read: <code>0.0.0.0:22</code> means "listening on port 22, on <em>every</em> network interface"; <code>127.0.0.1:6010</code> means "only reachable from this machine itself," a meaningfully different (and safer) scope. <code>Process</code> at the end names exactly which program owns that port — the same <code>PID</code>/<code>COMMAND</code> idea from Day 6's <code>ps aux</code>.</li><li><strong><code>dig</code>'s <code>ANSWER SECTION</code></strong> — the line under this heading is the actual result: domain name, a TTL (how long that answer can be cached, in seconds), record type (<code>A</code> = IPv4 address), and the IP itself.</li></ul></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>the 2021 global outage that took down Facebook, Instagram, and WhatsApp simultaneously was ultimately a networking misconfiguration (BGP routing) — the same category of "what can actually reach what, and why" question you're practicing here, just playing out at planetary scale instead of one sandbox box.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 17 — this one has you <code>diff</code> two files to find what changed; a nice pairing with today's "what's actually different here" theme.</p></div>
+<div class="field field-optional"><div class="field-label">Optional</div><p>search TryHackMe for a free room on basic networking — a nice comparison point for how a different platform explains the same ideas.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what's the difference between "is this port open" and "is this domain reachable at all"?</p></div>
+  </div>
+</details>
+<details class="day" id="day-18">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="18" aria-label="Mark Day 18 done"></span>
+    <span class="day-num">Day 18</span>
+    <span class="day-title">Firewall</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 18</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>control what can reach this box at the network level.</p>
+<blockquote>Go slowly. Never <code>enable</code> a firewall without first explicitly allowing SSH — locking yourself out of a cloud box is a common and painful mistake.</blockquote></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo ufw status verbose</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>Status: inactive</code>.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>ufw</code> is Ubuntu's friendly frontend over the kernel's real firewall. Checking status <em>before</em> changing anything is the "verify, don't assume" habit this whole project runs on.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>"locked myself out of my own cloud server with the firewall" is one of the single most common mistakes junior engineers make — genuinely a rite of passage. You now know the exact rule (allow SSH <em>before</em> enabling) that prevents it.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 18 — this one throws something unexpected at you the moment you log in; read the problem carefully before reacting.</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day18.sh</code> (read-only, makes no changes)</p></div>
+<div class="field field-talk"><div class="field-label">Talk it through live</div><p>the safe sequence to actually turn it on is <em>allow SSH first</em>, confirm it's in the ruleset, <strong>then</strong> enable, then verify you can still connect from a <em>second</em> terminal before closing your first one.</p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 5 review</div><p>1. Why isn't the public IP you SSH to actually configured on the box itself? 2. What does <code>ss -tulpn</code> tell you that <code>ps aux</code> doesn't, and vice versa? 3. What's the golden rule for the <em>order</em> of operations when enabling a firewall on a remote box, and why? 4. What does <code>dig</code> show you that <code>curl</code> doesn't?</p>
+<p>You should be holding the password for <strong>Bandit level 19</strong>.</p></div>
+</section>
+<section class="week" id="week-6">
+  <h2 class="week-title"><span class="week-eyebrow">Week 6</span>Docker Deep Dive</h2>
+  <div class="days"><details class="day" id="day-19">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="19" aria-label="Mark Day 19 done"></span>
+    <span class="day-num">Day 19</span>
+    <span class="day-title">Building your own images</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 19</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand what's happening underneath <code>docker run</code>.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>docker images
+docker pull alpine
+docker images</code></pre></div>
+<p>Then create a <code>Dockerfile</code>:</p>
+<div class="term" data-lang="dockerfile"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">dockerfile</span></div><pre><code>FROM ubuntu
+RUN apt update &amp;&amp; apt install -y cowsay
+CMD [&quot;cowsay&quot;, &quot;built by me&quot;]</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>docker build -t mycowsay .
+docker run --rm mycowsay</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>alpine</code> appear after pulling (a few MB — tiny compared to <code>ubuntu</code>), a build log, then cowsay output baked into the image with no install step needed at run time.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>a <code>Dockerfile</code> is a recipe — <code>FROM</code> a base, <code>RUN</code> setup commands, <code>CMD</code> what runs by default. <code>-t</code> tags the built image with a name, same as <code>ubuntu</code> or <code>alpine</code>.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>Docker's rise after 2013 fundamentally reshaped how software gets shipped, specifically because "works on my machine, breaks in production" had been such a chronic, expensive problem for decades — a <code>Dockerfile</code> is a machine-checkable answer to "exactly what does this environment need."</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 19 — a program running with elevated privileges hands you a shortcut here, if you can find it.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>why is <code>docker run --rm mycowsay</code> faster on repeat runs than <code>docker run --rm ubuntu</code> + installing cowsay each time?</p></div>
+  </div>
+</details>
+<details class="day" id="day-20">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="20" aria-label="Mark Day 20 done"></span>
+    <span class="day-num">Day 20</span>
+    <span class="day-title">Volumes and networks</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 20</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>make data survive a container being deleted, and let containers talk to each other.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>docker volume create mydata
+docker run --rm -v mydata:/data ubuntu bash -c &quot;echo hello &gt; /data/note.txt&quot;
+docker run --rm -v mydata:/data ubuntu cat /data/note.txt</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>hello</code>, printed by the <em>second</em>, completely separate container — proving the data lived in the volume, not the container.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>docker network create mynet
+docker run -d --rm --name web --network mynet nginx
+docker run --rm --network mynet alpine wget -qO- http://web</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>the nginx default welcome page's HTML, fetched by one container from another <strong>by container name</strong> — no IP needed.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>containers are throwaway by design; volumes are the deliberate exception — data placed in a volume outlives any container. A custom network lets containers resolve each other by name, which is exactly how multi-container apps (next lesson) talk to each other.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>treating a container like a permanent server — forgetting it's disposable and storing important data directly inside it instead of a volume — is one of the most common real mistakes beginners make with Docker, usually discovered the hard way when the container gets recreated and the data is just gone.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 20.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what would have happened in the volume example if you'd used two <em>different</em> volume names instead of <code>mydata</code> both times?</p></div>
+  </div>
+</details>
+<details class="day" id="day-21">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="21" aria-label="Mark Day 21 done"></span>
+    <span class="day-num">Day 21</span>
+    <span class="day-title">Docker Compose: multi-container apps</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 21</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>run a real multi-service app with one command.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><p>create <code>~/training/compose-demo/docker-compose.yml</code>:</p>
+<div class="term" data-lang="yaml"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">yaml</span></div><pre><code>services:
+  web:
+    image: nginx
+    ports:
+      - &quot;8080:80&quot;
+  redis:
+    image: redis</code></pre></div>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cd ~/training/compose-demo
+docker compose up -d
+docker compose ps
+curl -I http://localhost:8080
+docker compose logs redis | tail -5</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>both services listed as running, an HTTP 200 from nginx, and redis's startup logs.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>docker-compose.yml</code> describes a whole group of containers — this is how real applications are usually defined (a web server + a database + a cache, etc.), instead of typing several long <code>docker run</code> commands by hand. <code>docker compose up -d</code> starts everything, networked together automatically (services can reach each other by name, e.g. <code>redis</code>, same idea as Day 20).</p>
+<p><strong>Clean up when done:</strong></p>
+<div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>docker compose down</code></pre></div></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p><code>docker-compose.yml</code> (and its more elaborate descendant, Kubernetes YAML) is genuinely how a huge share of real production infrastructure is described today — this is not a toy format, it's the same shape of file running actual companies' backends.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 21 — cron shows up again here, from a different angle than Day 12.</p></div>
+<div class="field field-optional"><div class="field-label">Optional</div><p>search KodeKloud for their free Docker labs — multi-stage builds and registry concepts go beyond what this course covers.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>if <code>web</code>'s code needed to talk to <code>redis</code>, what hostname would it use — an IP address, or just <code>redis</code>?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day21.sh</code> (run while <code>docker compose up -d</code> is still active)</p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 6 review</div><p>1. Why did <code>docker run --rm mycowsay</code> not need to reinstall cowsay every time, once it was built into the image? 2. What problem do Docker volumes solve that containers alone don't? 3. In the <code>docker network</code> exercise, how did one container reach another by name instead of by IP — what made that possible? 4. What's the actual advantage of a <code>docker-compose.yml</code> file over several separate <code>docker run</code> commands?</p>
+<p>You should be holding the password for <strong>Bandit level 22</strong>.</p></div>
+</section>
+<section class="week" id="week-7">
+  <h2 class="week-title"><span class="week-eyebrow">Week 7</span>Security</h2>
+  <div class="days"><details class="day" id="day-22">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="22" aria-label="Mark Day 22 done"></span>
+    <span class="day-num">Day 22</span>
+    <span class="day-title">SSH and basic hardening</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 22</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>understand the security model you've relied on this whole project.</p>
+<blockquote>Go slowly — this is the day most likely to lock you out if rushed.</blockquote></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>cat ~/.ssh/authorized_keys
+sudo grep -E &quot;PasswordAuthentication|PermitRootLogin&quot; /etc/ssh/sshd_config</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>two key lines in <code>authorized_keys</code> (from earlier in this project), and config lines like <code>PasswordAuthentication no</code>.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p><code>authorized_keys</code> is the literal, complete list of who can log in as <code>ubuntu</code> via key auth. <code>PasswordAuthentication no</code> means nobody can log in with just a password — only a matching private key, which can't be brute-forced the way passwords can.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>key-only SSH auth became close to a universal default on serious internet-facing servers largely because password-based brute-force campaigns are constant and automated — bots try common username/password combinations against essentially every public IP, all day, every day. Key-only makes that entire class of attack irrelevant.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 22 — a cron job is doing something on a schedule here; go find out what.</p></div>
+<div class="field field-optional"><div class="field-label">Optional</div><p>search TryHackMe for a free room on SSH or Linux security fundamentals — security-flavored practice pairs well with today's material.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>what extra risk would <code>PasswordAuthentication yes</code> open up, given this box is reachable from the whole internet?</p></div>
+  </div>
+</details>
+<details class="day" id="day-23">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="23" aria-label="Mark Day 23 done"></span>
+    <span class="day-num">Day 23</span>
+    <span class="day-title">fail2ban: automated intrusion protection</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 23</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>actively defend against brute-force login attempts.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo apt install -y fail2ban
+sudo systemctl enable --now fail2ban
+sudo fail2ban-client status
+sudo fail2ban-client status sshd</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>fail2ban active, and an <code>sshd</code> jail showing current ban count (likely 0, unless this box has been attacked recently — it's worth checking).</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>fail2ban watches log files (like SSH's) for repeated failed login attempts and temporarily firewalls the offending IP. It's a standard, low-effort layer of defense on any internet-facing box — exactly what this sandbox is.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>internet-wide scanning bots probe essentially every public IPv4 address around the clock, sandbox or not — this isn't paranoia, it's baseline hygiene for anything internet-facing. Check your own <code>sshd</code> jail status above; it's a genuinely eye-opening first look at how much automated noise a plain public IP attracts.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 23 — another cron-adjacent level; the previous level's answer is your way in here.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>why does fail2ban matter <em>in addition to</em> key-only SSH auth from Day 22, not instead of it?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day23.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-24">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="24" aria-label="Mark Day 24 done"></span>
+    <span class="day-num">Day 24</span>
+    <span class="day-title">Reading the trail: logs and auditing</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 24</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>answer "who did what, and when" using real logs.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>last -x | head -10
+sudo journalctl -u ssh -n 20 --no-pager
+sudo grep &quot;Failed password&quot; /var/log/auth.log | tail -5</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p>recent login history, SSH service logs, and any failed login attempts recorded (there may be none, or several — the internet scans every SSH-facing IP constantly, this is normal).</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>this is the exact command style used at the very start of this project to work out when the two pre-existing Oracle instances were created and last used. Every serious "what happened here" investigation starts with logs, not guessing.</p>
+<p><strong>Decode it — a <code>last -x</code> line like <code>ubuntu pts/0  84.203.114.183  Fri Aug 8 19:58 - 22:58 (02:59)</code>:</strong> username, then <code>pts/0</code> (which terminal session — <code>pts</code> means a "pseudo-terminal," i.e. an SSH/remote session, as opposed to <code>tty</code> which would mean someone physically at the machine), then the IP they connected <em>from</em>, then the login time, logout time, and total session duration in parentheses. Lines starting with <code>reboot</code> or <code>runlevel</code> aren't logins at all — they're the system itself recording a restart, useful for spotting exactly when this box last rebooted.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>major breaches — the 2013 Target breach among them — are very often <em>detected</em> well after the fact, purely through patient log analysis, not caught in real time. Calmly reading logs after something's already gone wrong is one of the most valuable and most underrated skills in this entire field.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit level 24 — a brute-force-by-script level; this is a good excuse to write a small loop instead of trying passwords by hand.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>if you saw 50 failed password attempts from one IP in the last hour, what would you check or do next, based on Days 18 and 23?</p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 7 review</div><p>1. Why does <code>PasswordAuthentication no</code> matter even though you always log in with a key anyway? 2. What does fail2ban actually do, mechanically, when it detects repeated failed logins? 3. Why is fail2ban a <em>complement</em> to key-only SSH, not a replacement for it? 4. Name two log sources you'd check first if you suspected someone was trying to break into this box.</p>
+<p>You should be holding the password for <strong>Bandit level 25</strong>. From here through the low 30s, Bandit gets genuinely hard — expect some levels to take more than one sitting. That's the design, not a sign you're behind.</p></div>
+</section>
+<section class="week" id="week-8">
+  <h2 class="week-title"><span class="week-eyebrow">Week 8</span>Guru Capstones</h2>
+  <div class="days"><details class="day" id="day-25">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="25" aria-label="Mark Day 25 done"></span>
+    <span class="day-num">Day 25</span>
+    <span class="day-title">Mini investigation</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 26–27</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>debug something yourself, no script gives you the answer.</p>
+<p>Pick one and work it out using everything from Weeks 1-7:</p>
+<ul><li><strong>What's listening right now, and why?</strong> — combine <code>ss -tulpn</code> with <code>ps aux</code> to match each port to its actual program.</li><li><strong>How much disk space, and on what?</strong> — <code>df -h</code>, <code>du -sh *</code>.</li><li><strong>Who's logged in, and when?</strong> — <code>last -x</code>.</li></ul>
+<p>Write down what you found and why — that's the actual exercise.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit levels 26 and 27 — 27 involves a git repository with history worth digging through, foreshadowing Day 27's networking capstone nicely.</p></div>
+  </div>
+</details>
+<details class="day" id="day-26">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="26" aria-label="Mark Day 26 done"></span>
+    <span class="day-num">Day 26</span>
+    <span class="day-title">Capstone: deploy a real service</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 28–29</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>combine packages, systemd, and the firewall into one real, working deployment.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><div class="term" data-lang="bash"><div class="term-bar"><span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span><span class="term-lang">bash</span></div><pre><code>sudo apt install -y nginx
+echo &quot;&lt;h1&gt;Deployed by $(whoami) on $(date)&lt;/h1&gt;&quot; | sudo tee /var/www/html/index.html
+sudo systemctl enable --now nginx
+sudo ufw allow 80/tcp
+curl -I http://localhost</code></pre></div></div>
+<div class="field field-see"><div class="field-label">You should see</div><p><code>HTTP/1.1 200 OK</code> from your own custom page.</p></div>
+<div class="field field-why"><div class="field-label">What&#x27;s happening / why</div><p>this is the full real-world pattern: install software (Week 2), it registers itself as a systemd service (Week 4), you open the right firewall port (Week 5) — three separate skills from this course, combined into one actual working website.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>this exact stack — install, systemd, firewall — is genuinely how a meaningful fraction of the small-to-medium web still gets deployed today, no fancier than what you just did. There's real satisfaction in knowing that a "simple" personal blog or small business site is, underneath, doing roughly this.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit levels 28 and 29 — more git archaeology; look for things that were deleted or changed, not just what's there now.</p></div>
+<div class="field field-check"><div class="field-label">Check yourself</div><p>if <code>curl -I http://localhost</code> works from <em>on</em> the box but the page isn't reachable from your own laptop's browser using the public IP, which of the three steps above would you suspect first?</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p><code>bash ~/training/check_day26.sh</code></p></div>
+  </div>
+</details>
+<details class="day" id="day-27">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="27" aria-label="Mark Day 27 done"></span>
+    <span class="day-num">Day 27</span>
+    <span class="day-title">Capstone: WireGuard VPN</span>
+    <span class="day-badges"><span class="badge badge-host">host</span><span class="badge badge-bandit">Bandit 30–31</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>the secondary interest from <code>CLAUDE.md</code> — self-hosting a VPN. By now you have the networking, packages, systemd, and firewall background to actually understand what you're setting up.</p>
+<p>This is a proper mini-project — come back to a live session and we'll scope and build it together rather than scripting it in advance.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>WireGuard (first released 2016) was merged directly into the Linux kernel itself in 2020 — a rare honor — because it was such a dramatic simplification over older VPN protocols like OpenVPN and IPsec. The <code>vpn-server</code> box mentioned elsewhere in this project actually runs OpenVPN; building WireGuard here will give you a genuine point of comparison between the two.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit levels 30 and 31 — 31 wants you to interact with <code>git</code> in a way that isn't just <code>add</code>/<code>commit</code>; read the repository's own instructions carefully.</p></div>
+  </div>
+</details>
+<details class="day" id="day-28">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="28" aria-label="Mark Day 28 done"></span>
+    <span class="day-num">Day 28</span>
+    <span class="day-title">Capstone: tie it all together</span>
+    <span class="day-badges"><span class="badge badge-container">container</span><span class="badge badge-bandit">Bandit 32–33</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>one last project combining scripting, error handling, cron, and systemd — build a tiny automated health-check system.</p>
+<p><strong>Rough brief (work this out yourself, ask for help where you get stuck):</strong> write a script (with <code>set -e</code> from Day 11 in mind) that checks whether <code>nginx</code> (Day 26) is responding, logs the result with a timestamp, and — if it's down — attempts to restart it via <code>systemctl</code>. Schedule it with cron (Day 12) to run every 5 minutes. This is a simplified version of what real monitoring systems (Nagios, Prometheus alerting, etc.) do under the hood.</p></div>
+<div class="field field-real"><div class="field-label">In the real world</div><p>you've just built a tiny version of what tools like Nagios (2002) and Prometheus (2012) do for a living at essentially every serious tech company: automated "is it up, and if not, try to fix it, and tell someone if you can't." Nearly everything from this whole course — scripting, error handling, cron, systemd, networking — feeds into this one capstone. That's not a coincidence; it's genuinely how these pieces fit together in real infrastructure.</p></div>
+<div class="field field-apply"><div class="field-label">Apply it</div><p>Bandit levels 32 and 33 — the final two. Level 33 is the last one; solving it means you've finished all 34 levels (0 through 33) of the wargame, entirely spread across this course, one day at a time.</p></div>
+  </div>
+</details></div>
+  <div class="review"><div class="review-label">Week 8 review</div><p>1. What three separate skills from earlier weeks combined into Day 26's deployment? 2. What's genuinely different about WireGuard compared to older VPN protocols like OpenVPN? 3. In Day 28's health-check script, what would <code>set -e</code> actually protect against? 4. Looking back at Bandit level 0 versus level 33 — what changed about <em>how</em> you approached an unfamiliar problem, not just what commands you used?</p></div>
+</section>
+<section class="week" id="week-9">
+  <h2 class="week-title"><span class="week-eyebrow">Week 9</span>Final Skills Test</h2>
+  <div class="days"><details class="day" id="day-29">
+  <summary>
+    <span class="day-check"><input type="checkbox" class="daydone" data-day="29" aria-label="Mark Day 29 done"></span>
+    <span class="day-num">Day 29</span>
+    <span class="day-title">One platform, no hand-holding</span>
+    <span class="day-badges"><span class="badge badge-container">container</span></span>
+    <span class="chev" aria-hidden="true"></span>
+  </summary>
+  <div class="day-body">
+    <div class="field field-objective"><div class="field-label">Objective</div><p>prove the whole foundation transfers to a platform this course had no part in building.</p></div>
+<div class="field field-gohere"><div class="field-label">Go here</div><p><a href="https://tryhackme.com/" target="_blank" rel="noopener">tryhackme.com</a> — search for the "Linux Fundamentals" room path (free tier). If you sampled a room back on Day 22, pick up from there; otherwise start fresh.</p></div>
+<div class="field field-do"><div class="field-label">Do this</div><p>complete the path, start to finish. Unlike every day before this one, there's no "Do this" command list — figuring out what each room needs <em>is</em> the exercise, using nothing but 28 days of built-up instinct. Where it uses a tool this course didn't cover, that's useful signal, not a gap you failed to close — note it down.</p></div>
+<div class="field field-comeback"><div class="field-label">Come back and tell me</div><ul><li>What (if anything) came up that this course never touched.</li><li>Whether it felt meaningfully easier than it would have a month or two ago — that comparison is the actual point of this whole day.</li></ul>
+<p><strong>If you want more after this:</strong> OverTheWire has other free wargames in the same style as Bandit — <strong>Natas</strong> (web application security), <strong>Leviathan</strong> (beginner-friendly binary/exploitation basics), and <strong>Krypton</strong> (cryptography puzzles). KodeKloud's free Docker labs are also worth a fuller pass if Day 21's optional detour interested you. None of that is required — this course is complete either way.</p></div>
+<div class="field field-selfcheck"><div class="field-label">Self-check</div><p>none — this one's genuinely unverifiable from here. Self-report with <code>course.sh done 29</code> once you've finished the path.</p>
+<p>## After this</p>
+<p>You've now covered real sysadmin fundamentals end to end — shell, permissions, environment variables, users, processes, packages, text wrangling, scripting with real error handling, git, backups, cron, systemd, networking, firewalls, Docker (including Compose), and security hardening — plus two real deployed capstones, all 34 levels of OverTheWire Bandit solved incrementally alongside the material, and a final proof-it-transfers test on a platform this course didn't write. That combination — built-here fundamentals <em>and</em> proven against material this project didn't script — is a genuinely solid, credible foundation. Natural next directions from here: Ansible (automating server setup itself), a proper CI/CD pipeline, Kubernetes, or one of the wargames mentioned in Day 29. Ask when you get there.</p></div>
+  </div>
+</details></div>
+  
+</section>
+
+    <section class="flags-section" id="flags">
+      <div class="eyebrow">Quick reference</div>
+      <h2 class="week-title" style="font-size:1.7rem;">Command &amp; flag cheatsheet</h2>
+      <p style="color:var(--text-dim); max-width:70ch;">Every command used across the 29 days, with the flags actually worth remembering. When in doubt on the real box, <code>man &lt;command&gt;</code> always has the full list.</p>
+      <div class="flags-grid">
+        <div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">ls</code><span class="flag-desc">list files</span></div><div class="flag-row"><code>-l</code><span>long format: permissions, owner, size, date</span></div><div class="flag-row"><code>-a</code><span>show hidden dotfiles too</span></div><div class="flag-row"><code>-h</code><span>human-readable sizes (with -l)</span></div><div class="flag-row"><code>-la</code><span>the combo you&#x27;ll type a thousand times</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">chmod</code><span class="flag-desc">change permissions</span></div><div class="flag-row"><code>644</code><span>owner read+write, everyone else read-only</span></div><div class="flag-row"><code>755</code><span>owner full access, everyone else read+execute</span></div><div class="flag-row"><code>000</code><span>nobody (not even owner) can do anything</span></div><div class="flag-row"><code>+x</code><span>add execute permission, keep everything else</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">grep</code><span class="flag-desc">search text</span></div><div class="flag-row"><code>-i</code><span>case-insensitive match</span></div><div class="flag-row"><code>-r</code><span>search recursively through a directory</span></div><div class="flag-row"><code>-n</code><span>show line numbers</span></div><div class="flag-row"><code>-E</code><span>extended regex: enables | and () without backslashes</span></div><div class="flag-row"><code>-v</code><span>invert match — show lines that DON&#x27;T match</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">sed</code><span class="flag-desc">stream editor</span></div><div class="flag-row"><code>s/x/y/</code><span>replace first match of x with y, per line</span></div><div class="flag-row"><code>s/x/y/g</code><span>replace every match, not just the first</span></div><div class="flag-row"><code>-i</code><span>edit the file in place instead of printing</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">find</code><span class="flag-desc">search the filesystem</span></div><div class="flag-row"><code>-name</code><span>match by filename (supports wildcards)</span></div><div class="flag-row"><code>-type f / -type d</code><span>files only / directories only</span></div><div class="flag-row"><code>-maxdepth N</code><span>don&#x27;t recurse deeper than N levels</span></div><div class="flag-row"><code>-mtime -N</code><span>modified within the last N days</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">ps</code><span class="flag-desc">list processes</span></div><div class="flag-row"><code>aux</code><span>everyone&#x27;s processes, detailed, even without a terminal</span></div><div class="flag-row"><code>-ef</code><span>similar, full-format alternative</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">kill</code><span class="flag-desc">send a signal to a process</span></div><div class="flag-row"><code>(no flag)</code><span>SIGTERM — ask nicely, process can clean up first</span></div><div class="flag-row"><code>-9</code><span>SIGKILL — force-stop immediately, no cleanup</span></div><div class="flag-row"><code>-l</code><span>list all available signal names</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">apt</code><span class="flag-desc">package management</span></div><div class="flag-row"><code>update</code><span>refresh the list of available versions (installs nothing)</span></div><div class="flag-row"><code>install -y</code><span>install, auto-confirming prompts</span></div><div class="flag-row"><code>remove</code><span>uninstall, keep config files</span></div><div class="flag-row"><code>purge</code><span>uninstall and delete config files too</span></div><div class="flag-row"><code>autoremove</code><span>clean up now-unneeded dependencies</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">systemctl</code><span class="flag-desc">manage services</span></div><div class="flag-row"><code>status</code><span>current state + recent logs for a service</span></div><div class="flag-row"><code>start / stop</code><span>start or stop right now, no persistence</span></div><div class="flag-row"><code>enable / disable</code><span>start automatically on boot, or don&#x27;t</span></div><div class="flag-row"><code>enable --now</code><span>both enable AND start, in one command</span></div><div class="flag-row"><code>daemon-reload</code><span>make systemd notice a new/changed unit file</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">journalctl</code><span class="flag-desc">view systemd logs</span></div><div class="flag-row"><code>-u &lt;service&gt;</code><span>logs from just one service</span></div><div class="flag-row"><code>-n 20</code><span>last 20 lines</span></div><div class="flag-row"><code>-f</code><span>follow live, like tail -f</span></div><div class="flag-row"><code>--no-pager</code><span>print and exit instead of opening a pager</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">ss</code><span class="flag-desc">socket / port statistics</span></div><div class="flag-row"><code>-t</code><span>TCP sockets</span></div><div class="flag-row"><code>-u</code><span>UDP sockets</span></div><div class="flag-row"><code>-l</code><span>listening sockets only</span></div><div class="flag-row"><code>-p</code><span>show the owning process</span></div><div class="flag-row"><code>-n</code><span>numeric ports, don&#x27;t resolve service names</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">docker run</code><span class="flag-desc">start a container</span></div><div class="flag-row"><code>-it</code><span>interactive terminal attached</span></div><div class="flag-row"><code>-d</code><span>detached — runs in the background</span></div><div class="flag-row"><code>--rm</code><span>auto-delete the container when it stops</span></div><div class="flag-row"><code>--name</code><span>give it a memorable name instead of a random one</span></div><div class="flag-row"><code>-v host:container</code><span>mount a volume or host path</span></div><div class="flag-row"><code>-p host:container</code><span>map a port</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">docker compose</code><span class="flag-desc">multi-container apps</span></div><div class="flag-row"><code>up -d</code><span>start everything in the file, detached</span></div><div class="flag-row"><code>ps</code><span>status of this project&#x27;s containers</span></div><div class="flag-row"><code>logs &lt;svc&gt;</code><span>logs for one service in the file</span></div><div class="flag-row"><code>down</code><span>stop and remove everything started by up</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">git</code><span class="flag-desc">version control</span></div><div class="flag-row"><code>init</code><span>create a new repository</span></div><div class="flag-row"><code>add &lt;file&gt;</code><span>stage changes for the next commit</span></div><div class="flag-row"><code>commit -m &quot;...&quot;</code><span>save a staged snapshot with a message</span></div><div class="flag-row"><code>status</code><span>what&#x27;s changed since the last commit</span></div><div class="flag-row"><code>diff</code><span>exact line-by-line changes, unstaged</span></div><div class="flag-row"><code>log --oneline</code><span>compact commit history</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">tar</code><span class="flag-desc">archive files</span></div><div class="flag-row"><code>-c</code><span>create an archive</span></div><div class="flag-row"><code>-x</code><span>extract an archive</span></div><div class="flag-row"><code>-z</code><span>gzip compress/decompress</span></div><div class="flag-row"><code>-v</code><span>verbose — list files as it works</span></div><div class="flag-row"><code>-f &lt;name&gt;</code><span>the archive filename</span></div><div class="flag-row"><code>-C &lt;dir&gt;</code><span>change directory first, for clean relative paths</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">rsync</code><span class="flag-desc">efficient copying/syncing</span></div><div class="flag-row"><code>-a</code><span>archive mode — preserves permissions, timestamps, etc.</span></div><div class="flag-row"><code>-v</code><span>verbose</span></div><div class="flag-row"><code>-n</code><span>dry run — show what would happen, change nothing</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">ufw</code><span class="flag-desc">firewall frontend</span></div><div class="flag-row"><code>status verbose</code><span>current rules and default policy</span></div><div class="flag-row"><code>allow 22/tcp</code><span>explicitly allow a port</span></div><div class="flag-row"><code>enable / disable</code><span>turn the firewall on or off</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">useradd / usermod</code><span class="flag-desc">manage users</span></div><div class="flag-row"><code>useradd -m</code><span>create the account with a home directory</span></div><div class="flag-row"><code>useradd -s /bin/bash</code><span>set the default shell</span></div><div class="flag-row"><code>usermod -aG &lt;group&gt;</code><span>APPEND to a group (never drop -a)</span></div></div>
+<div class="flag-card"><div class="flag-card-head"><code class="flag-cmd">cron</code><span class="flag-desc">schedule syntax (5 fields)</span></div><div class="flag-row"><code>minute hour dom month dow</code><span>the field order, always</span></div><div class="flag-row"><code>* * * * *</code><span>every minute</span></div><div class="flag-row"><code>0 3 * * *</code><span>03:00 every day</span></div><div class="flag-row"><code>crontab -l / -e / -r</code><span>list / edit / remove your schedule</span></div></div>
+      </div>
+    </section>
+
+    <footer class="page-foot">
+      <span>linux-sandbox · Oracle Cloud Always Free · 143.47.240.110</span>
+      <span>Progress here is stored only in this browser — the source of truth is <code>~/training/course.sh status</code> on the box itself.</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'lsb_course_progress_v1';
+  function loadDone(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveDone(obj){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }catch(e){}
+  }
+  var done = loadDone();
+  var total = document.querySelectorAll('.daydone').length;
+  document.getElementById('totalCount').textContent = total;
+
+  function applyState(){
+    var checks = document.querySelectorAll('.daydone');
+    var count = 0;
+    checks.forEach(function(cb){
+      var day = cb.getAttribute('data-day');
+      var isDone = !!done[day];
+      cb.checked = isDone;
+      if(isDone) count++;
+      var navLink = document.querySelector('.nav-day[href="#day-'+day+'"]');
+      if(navLink){ navLink.classList.toggle('done', isDone); }
+    });
+    document.getElementById('doneCount').textContent = count;
+    var pct = total ? Math.round(count/total*100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    var streakEl = document.getElementById('streakLine');
+    if(count === 0){
+      streakEl.textContent = 'Check off a day as you finish it';
+    } else if(count === total){
+      streakEl.textContent = 'All done. Genuinely well earned.';
+    } else {
+      streakEl.textContent = (total-count) + ' day' + ((total-count)===1?'':'s') + ' to go';
+    }
+  }
+
+  document.addEventListener('change', function(e){
+    if(e.target.classList && e.target.classList.contains('daydone')){
+      var day = e.target.getAttribute('data-day');
+      if(e.target.checked){ done[day] = true; } else { delete done[day]; }
+      saveDone(done);
+      applyState();
+    }
+  });
+
+  applyState();
+
+  // theme toggle
+  var THEME_KEY = 'lsb_theme_choice_v1';
+  function applyTheme(choice){
+    if(choice === 'system'){ document.documentElement.removeAttribute('data-theme'); }
+    else{ document.documentElement.setAttribute('data-theme', choice); }
+    document.querySelectorAll('[data-theme-choice]').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-theme-choice') === choice);
+    });
+    try{ localStorage.setItem(THEME_KEY, choice); }catch(e){}
+  }
+  document.querySelectorAll('[data-theme-choice]').forEach(function(btn){
+    btn.addEventListener('click', function(){ applyTheme(btn.getAttribute('data-theme-choice')); });
+  });
+  var savedTheme = 'system';
+  try{ savedTheme = localStorage.getItem(THEME_KEY) || 'system'; }catch(e){}
+  applyTheme(savedTheme);
+
+  // clicking a nav day opens that day's <details> and scrolls to it
+  document.querySelectorAll('.nav-day').forEach(function(a){
+    a.addEventListener('click', function(){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el && el.tagName === 'DETAILS'){ el.open = true; }
+    });
+  });
+})();
+</script>
