@@ -5,6 +5,11 @@ Organized by the week it first shows up in — skim a section after
 finishing that week, or use this for a refresher before starting the
 next one.
 
+- **Wargame** — a gamified security/Linux practice format where each
+  level is a real login and solving it reveals the credentials for the
+  next one. [OverTheWire Bandit](https://overthewire.org/wargames/bandit/)
+  is the one woven into this course, one level per day.
+
 ## Week 1 — Shell Foundations
 
 - **Shell** — the program that reads what you type and runs commands
@@ -17,6 +22,14 @@ next one.
 - **`chown`** — change a file's owner.
 - **Root** — the all-powerful admin account (uid 0); ignores permission
   checks entirely.
+- **Environment variable** — a named value available to your shell and
+  anything it runs (e.g. `$HOME`).
+- **`$PATH`** — a colon-separated list of directories the shell
+  searches, in order, when you type a bare command name.
+- **`export`** — makes a shell variable visible to child processes, not
+  just the current shell.
+- **`.bashrc`** — a script that runs on every new shell session;
+  anything `export`ed here becomes permanent across logins.
 
 ## Week 2 — Multi-User Linux
 
@@ -48,9 +61,26 @@ next one.
   automatically at set times/intervals.
 - **Crontab** — the file (edited via the `crontab` command) listing a
   user's scheduled cron jobs.
+- **`set -e`** — a bash option that stops a script immediately if any
+  command fails, instead of logging the error and continuing.
+- **`trap`** — runs a command automatically when a condition occurs in
+  a script (e.g. `ERR`, fired whenever a command fails).
 
-## Week 4 — Services
+## Week 4 — Version Control & Services
 
+- **Git** — a version control system that tracks changes to files over
+  time via snapshots ("commits").
+- **Repository (repo)** — a project tracked by git, identified by a
+  hidden `.git` folder.
+- **`git init`** — creates a new, empty git repository.
+- **Staging** (`git add`) — marking a file's changes to be included in
+  the *next* commit, without saving the snapshot yet.
+- **Commit** (`git commit`) — actually saving a staged snapshot, with a
+  message describing it.
+- **`git log`** — shows the history of commits.
+- **`git status`** / **`git diff`** — show what's changed since the
+  last commit; `status` summarizes which files, `diff` shows the exact
+  line-by-line changes.
 - **systemd** — the process manager that starts, stops, and supervises
   background services on modern Linux.
 - **Service / unit** — a single thing systemd manages (e.g. `docker`,
@@ -61,6 +91,9 @@ next one.
 - **`journalctl`** — systemd's built-in log viewer.
 - **Unit file** — the config file (`.service`) describing how systemd
   should run a service.
+- **`tar`** — bundles files/directories into one archive file.
+- **`rsync`** — copies files efficiently, transferring only what's
+  changed on repeat runs; used by real backup and deployment tooling.
 
 ## Week 5 — Networking
 

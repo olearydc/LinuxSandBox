@@ -1,6 +1,6 @@
 # Linux Learning Path — Zero to Guru
 
-An 8-week, 29-day training course for the `linux-sandbox` box. No prior
+A 9-week, 29-day training course for the `linux-sandbox` box. No prior
 Linux knowledge assumed beyond what you've already done in this
 project (SSH in, run `docker run`).
 

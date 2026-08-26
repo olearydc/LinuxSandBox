@@ -22,7 +22,7 @@ familiar. Not committed to yet — treat as something to explain and maybe
 try, not something to build unprompted.
 
 For hands-on usage instructions (SSH, Docker reset workflow, etc.), see
-[USE_ME.md](USE_ME.md). For the structured 8-week, 29-day learning
+[USE_ME.md](USE_ME.md). For the structured 9-week, 29-day learning
 curriculum, see [LEARNING.md](LEARNING.md) — pace is explicitly
 open-ended (the user is fine with this taking months; "1 day a week"
 is a stated acceptable pace, not a fallback). [GLOSSARY.md](GLOSSARY.md)

@@ -85,7 +85,7 @@ it if/when you actually need it.
 
 ## Learning the course
 
-There's a full 8-week, 29-day training course in
+There's a full 9-week, 29-day training course in
 [LEARNING.md](LEARNING.md) — shell basics through Docker Compose,
 security hardening, and real capstone deployments, with "in the real
 world" context on every day tying it to actual incidents and practice.
