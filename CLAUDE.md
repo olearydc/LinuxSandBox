@@ -22,7 +22,7 @@ familiar. Not committed to yet — treat as something to explain and maybe
 try, not something to build unprompted.
 
 For hands-on usage instructions (SSH, Docker reset workflow, etc.), see
-[USE_ME.md](USE_ME.md). For the structured 9-week, 32-day learning
+[USE_ME.md](USE_ME.md). For the structured 8-week, 29-day learning
 curriculum, see [LEARNING.md](LEARNING.md) — pace is explicitly
 open-ended (the user is fine with this taking months; "1 day a week"
 is a stated acceptable pace, not a fallback). [GLOSSARY.md](GLOSSARY.md)
@@ -38,11 +38,13 @@ The `training/` directory (local copy in this repo, deployed to
   state (not just "did you run the command")
 - `course.sh` — progress tracker: `status` (planner — progress bar +
   streak counter), `done <N>` / `undone <N>` (marker), `test <N>`
-  (tester), `certificate` (prints a completion certificate once all 32
-  are done — Days 29-32 are external-platform completions, self-marked
-  since they can't be verified from the instance). A login banner
-  (added to `~/.bashrc` on the instance)
-  shows `course.sh next` automatically on every SSH login.
+  (tester), `certificate` (prints a completion certificate once all 29
+  are done — Day 29 is a final external skills test, self-marked since
+  it can't be verified from the instance). A login banner (added to
+  `~/.bashrc` on the instance) shows `course.sh next` automatically on
+  every SSH login. A Bandit level (overthewire.org) is woven into
+  nearly every one of the 28 core days — by design there's no separate
+  "go do Bandit" block; it's `LEARNING.md`'s "🎯 Apply it" line each day.
 
 When the curriculum changes (days added/renumbered/retitled), keep
 `course.sh`'s `TITLES` array in sync, update `provision.sh`/HANDOVER.md

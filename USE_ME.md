@@ -85,7 +85,7 @@ it if/when you actually need it.
 
 ## Learning the course
 
-There's a full 9-week, 32-day training course in
+There's a full 8-week, 29-day training course in
 [LEARNING.md](LEARNING.md) — shell basics through Docker Compose,
 security hardening, and real capstone deployments, with "in the real
 world" context on every day tying it to actual incidents and practice.
@@ -97,11 +97,11 @@ Track your progress with the built-in tracker, already set up on the
 instance:
 
 ```bash
-~/training/course.sh status        # progress bar, streak, all 32 days
+~/training/course.sh status        # progress bar, streak, all 29 days
 ~/training/course.sh next          # what to do next
 ~/training/course.sh test 4        # run Day 4's automated self-check
 ~/training/course.sh done 4        # mark Day 4 complete
-~/training/course.sh certificate   # once all 32 are done
+~/training/course.sh certificate   # once all 29 are done
 ```
 
 Every login also shows a one-line reminder of what's next. Or just say

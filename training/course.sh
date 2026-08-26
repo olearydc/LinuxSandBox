@@ -42,10 +42,7 @@ TITLES=(
   "Capstone: deploy a real service"
   "Capstone: WireGuard VPN"
   "Capstone: tie it all together"
-  "External mastery: finish Bandit (26-34)"
-  "External mastery: finish TryHackMe Linux Fundamentals"
-  "External mastery: finish KodeKloud Docker labs"
-  "Where to go from here"
+  "Final skills test: TryHackMe Linux Fundamentals"
 )
 TOTAL=$((${#TITLES[@]} - 1))
 
@@ -160,14 +157,14 @@ case "$1" in
 
    Awarded to: the linux-sandbox admin
 
-   For completing all 32 days: shell fundamentals,
+   For completing all 29 days: shell fundamentals,
    permissions, environment variables, users, processes,
    packages, text wrangling, scripting with real error
    handling, git, cron, systemd, backups, networking,
    firewalls, Docker (incl. Compose), SSH hardening,
-   fail2ban, log auditing, real deployed capstones, and
-   full completion of OverTheWire Bandit, TryHackMe Linux
-   Fundamentals, and the KodeKloud Docker labs.
+   fail2ban, log auditing, real deployed capstones, all
+   34 levels of OverTheWire Bandit solved incrementally
+   throughout, and a final TryHackMe skills test.
 
    Slow and steady. Well earned.
 EOF

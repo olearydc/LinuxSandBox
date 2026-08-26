@@ -9,7 +9,7 @@ context.
 ## What this project is, in one paragraph
 
 A personal Linux practice sandbox on Oracle Cloud's Always Free tier,
-with Docker for fast disposable resets, a full 32-day self-paced
+with Docker for fast disposable resets, a full 29-day self-paced
 training course, and a progress tracker — all documented in this repo
 (`c:\Scripts\linux-sandbox`). Full background and decisions:
 [CLAUDE.md](CLAUDE.md).
@@ -20,7 +20,7 @@ training course, and a progress tracker — all documented in this repo
 |---|---|
 | `CLAUDE.md` | Full project history, decisions, current state — the source of truth |
 | `USE_ME.md` | User-facing quick reference: connecting, Docker reset patterns, course tracker commands |
-| `LEARNING.md` | The 32-day training curriculum itself |
+| `LEARNING.md` | The 29-day training curriculum itself |
 | `HANDOVER.md` | This file |
 | `provision.sh` | Idempotent script that sets up a host from scratch (or repairs an existing one) — update, hostname, Docker, neofetch, login banner |
 | `training/course.sh` | Progress tracker (planner/marker/tester) — lives on the instance at `~/training/course.sh` |

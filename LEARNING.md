@@ -1,11 +1,18 @@
 # Linux Learning Path — Zero to Guru
 
-A 9-week, 32-day training course for the `linux-sandbox` box. No prior
+An 8-week, 29-day training course for the `linux-sandbox` box. No prior
 Linux knowledge assumed beyond what you've already done in this
-project (SSH in, run `docker run`). Weeks 1-8 build the foundation on
-this box; Week 9 sends you out to fully complete three respected
-external platforms (OverTheWire Bandit, TryHackMe, KodeKloud) using
-nothing but what you've already learned — the real proof it stuck.
+project (SSH in, run `docker run`).
+
+**A steady progression, not a big jump at the end:** alongside each
+day's core lesson, you'll also solve one level of
+[OverTheWire Bandit](https://overthewire.org/wargames/bandit/) — a
+free, no-signup SSH wargame where each level is a real login and the
+password to the next level is hidden somewhere you have to find. By
+the time you finish Week 8, you'll have solved **all 34 levels**, one
+or two at a time, each one applying what that day just taught against
+a box this course didn't build for you. Day 29 is a single final skills
+test on a different platform, to prove it all transfers.
 
 **How each day works:**
 - **Do this** — the exact command(s) to type
@@ -15,6 +22,8 @@ nothing but what you've already learned — the real proof it stuck.
 - **What's happening / why** — the reasoning, not just the syntax
 - **🌍 In the real world** — how this actually shows up in real
   incidents and real practice, not just theory
+- **🎯 Apply it** — the Bandit level to solve today, applying what you
+  just learned against an unfamiliar box
 - **Check yourself** — a question to answer in your own words *before*
   moving on
 - **Self-check** — where a script on the instance can verify your work
@@ -24,17 +33,19 @@ nothing but what you've already learned — the real proof it stuck.
 disposable container: `docker run -it --rm ubuntu bash` (see
 [USE_ME.md](USE_ME.md)). **(host)** days need the real machine —
 users, systemd, cron, git history, and real networking don't exist in
-a bare container.
+a bare container. Bandit itself is always a separate SSH connection to
+`bandit.labs.overthewire.org`, regardless of what the day's main
+exercise uses.
 
-**Pace:** there is no deadline here. ~3 days a week gets you through
-this in about 9-10 weeks, but if that feels rushed, go slower — 1 day a
-week is a perfectly good pace and just means several months, which is
-fine. Any day with more than one exercise can be split across two
-sessions — do the first exercise, stop, come back later for the rest of
-that same day. Understanding beats speed every time; the self-checks
-and weekly reviews aren't graded on how fast you got there. Come back
-anytime and say "day N" — I'll walk through it live, answer questions,
-and check your work.
+**Pace:** there is no deadline here. With a Bandit level built into
+every day, most days will genuinely take a real sitting — 30-60+
+minutes is normal, sometimes more on the harder levels, and that's the
+point, not a problem. ~3 days a week gets you through this in about
+10 weeks; 1 day a week is just as valid and means several months. Any
+day can be split across two sessions — do the core lesson, stop, come
+back later for that day's Bandit level. Understanding beats speed
+every time. Come back anytime and say "day N" — I'll walk through it
+live, answer questions, and check your work.
 
 ---
 
@@ -67,6 +78,11 @@ command — check here before searching online. `history` plus the
 release in 1971 — even senior engineers reach for `man <cmd>` or a
 cheat-sheet constantly. Nobody memorizes every flag; knowing *how to
 look it up fast* is the actual skill.
+
+**🎯 Apply it:** [Bandit level 0](https://overthewire.org/wargames/bandit/)
+— the connection details and starting password are right there on the
+page. This level is pure navigation, exactly what you just practiced.
+Solve it before moving on to Day 2.
 
 **Check yourself:** why does `.bashrc` show up in `ls -la` but not
 plain `ls`?
@@ -101,6 +117,11 @@ common real breach causes at scale — the 2017 Equifax breach and
 countless leaked cloud storage buckets over the years trace back to
 exactly this category of mistake: something readable/writable that
 shouldn't have been.
+
+**🎯 Apply it:** Bandit level 1 — solve it using the password level 0
+gave you. Figuring out what today's level actually needs *is* the
+exercise; that's true for every level from here on, so this instruction
+won't repeat it every day.
 
 **Check yourself:** what chmod number gives the owner full access and
 everyone else nothing?
@@ -160,6 +181,8 @@ reason vim endures: it's preinstalled on nearly every Linux server on
 Earth, so knowing it means you're never stuck when GUI editors and
 mouse support simply aren't an option — which is most of the time on a
 remote server.
+
+**🎯 Apply it:** Bandit level 2.
 
 **Check yourself:** you open a file in vim, make changes you didn't
 mean to make, and want to abandon them entirely. What do you type?
@@ -228,6 +251,9 @@ being installed is one of the most common early points of confusion —
 the overwhelming majority of the time it's a `$PATH` problem, not a
 broken install.
 
+**🎯 Apply it:** Bandit level 3 — a good reminder that not everything
+useful is visible with a plain `ls`.
+
 **Check yourself:** if you installed a program but typing its name
 gives `command not found`, what two things would you check first?
 
@@ -247,6 +273,9 @@ where slow-and-steady pays off, not a formality to skip.
    saving?
 4. What's the difference between Normal mode and Insert mode in vim?
 5. What is `$PATH`, and what breaks if a directory isn't in it?
+
+By now you should be sitting on the password for **Bandit level 4** —
+if not, that's worth resolving before Week 2, not after.
 
 # Week 2 — Multi-User Linux
 
@@ -276,6 +305,8 @@ recurring theme in real intrusions and internal data leaks — someone
 gets added to a group "just for now" that never gets revoked, or a
 script overwrites a group list instead of appending to it (exactly
 what `-aG` protects against) and quietly strips someone's real access.
+
+**🎯 Apply it:** Bandit level 4.
 
 **Check yourself:** why `-aG` and not just `-G`?
 
@@ -311,6 +342,8 @@ against live production. "What's actually running right now, and
 should it be" is a genuinely load-bearing question in production
 systems, not just a sandbox exercise.
 
+**🎯 Apply it:** Bandit level 5.
+
 **Check yourself:** when might `kill <pid>` (no `-9`) fail to stop
 something?
 
@@ -342,6 +375,8 @@ backdoor that nearly compromised SSH across huge swaths of the
 internet — exploit exactly the trust you place in `apt install`. Every
 install is you trusting that the maintainer's code does what it says.
 
+**🎯 Apply it:** Bandit level 6.
+
 **Check yourself:** what's the difference between `apt remove cowsay`
 and `apt purge cowsay`?
 
@@ -359,26 +394,7 @@ and `apt purge cowsay`?
 4. What does `apt update` actually do — and what does it *not* do?
 5. What's the difference between `apt remove` and `apt purge`?
 
-## 🔗 External checkpoint: OverTheWire Bandit, levels 0-8
-
-**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
-(free, no signup required)
-
-**What it is:** a famous, gamified "wargame" — each level is a real SSH
-login where the password to the *next* level is hidden somewhere you
-have to find using exactly what you've learned so far: navigation,
-`ls -la`, permissions, `find`, reading files. Level 0's connection
-details and starting password are right there on the page.
-
-**Do this:** work through **levels 0 to 8** — that's the range that
-matches Weeks 1-2 of this course. Don't rush past a level you had to
-guess your way through; if you didn't understand *why* a command
-worked, that's worth more than the password itself.
-
-**Come back and tell me:** which level gave you the most trouble, and
-why. If you get properly stuck on one, that's a great thing to bring
-to a Claude session — talking through *why* a level isn't working
-teaches more than the answer would.
+You should be holding the password for **Bandit level 7** by now.
 
 # Week 3 — Text Wrangling & Automation
 
@@ -409,6 +425,8 @@ exactly how most real log analysis and incident response happens
 today, decades later — nobody writes one giant program to investigate
 a production issue, they chain `grep`, `awk`, `sort`, `uniq` together
 live.
+
+**🎯 Apply it:** Bandit level 7 — `grep` earns its place here.
 
 **Check yourself:** write one line, using a pipe, that tells you how
 many processes are currently running — without creating a file.
@@ -445,6 +463,8 @@ deployed to their edge network (a "ReDoS" — regex denial of service).
 Regex is genuinely powerful and genuinely dangerous when careless —
 worth respecting, not just memorizing syntax for.
 
+**🎯 Apply it:** Bandit level 8.
+
 **Check yourself:** what would `sed -i 's/cat/CAT/g' animals.txt` do
 differently from the command above?
 
@@ -480,6 +500,8 @@ which interpreter runs the file. `chmod +x` grants execute permission
 one quietly run a huge amount of real infrastructure — deployment
 steps, cleanup jobs, "glue" between systems — at literally every tech
 company. It's rarely glamorous, but it's genuinely everywhere.
+
+**🎯 Apply it:** Bandit level 9.
 
 **Check yourself:** what error would you get running the script
 *without* `chmod +x` first?
@@ -545,6 +567,9 @@ half-updated, broken state. `set -e` (and its stricter cousin
 `set -euo pipefail`) is close to a default best practice for any bash
 script that matters.
 
+**🎯 Apply it:** Bandit level 10 — a good moment to `man` an encoding
+tool you haven't used yet rather than guessing.
+
 **Check yourself:** what's the practical difference in behavior
 between `risky.sh` and `safe_script.sh`, and why would that matter for
 a real deployment script?
@@ -588,6 +613,8 @@ against a system that's since changed underneath it. Knowing exactly
 what's scheduled (`crontab -l`) and cleaning up after yourself, like
 you're about to, is a genuine habit worth keeping.
 
+**🎯 Apply it:** Bandit level 11.
+
 **Check yourself:** what would `0 3 * * *` mean instead of `* * * * *`?
 
 **Self-check:** `bash ~/training/check_day12.sh` (run it *before*
@@ -608,25 +635,9 @@ you're about to, is a genuine habit worth keeping.
 6. In a cron schedule `* * * * *`, what do the five fields mean, in
    order?
 
-## 🔗 External checkpoint: OverTheWire Bandit, levels 9-18
-
-**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
-(continue from wherever you left off — your progress is just "which
-level's password do I currently have," there's no account to lose)
-
-**Do this:** levels **9 to 18** lean much more heavily on `grep`,
-`find` with more advanced flags, and basic scripting logic — exactly
-Week 3's material. This range is noticeably harder than 0-8; that's
-expected, and a good sign you're past the easy part.
-
-**Come back and tell me:** if any level took you more than 15-20
-minutes of genuine effort, it's worth reviewing here rather than just
-moving on once you've solved it.
-
-This is a 34-level wargame in total, and the plan across this course is
-to eventually finish all of it — the next chunk (19-25, networking-
-flavored) comes after Week 5, and the final push to level 34 is a
-dedicated goal in Week 9, once the whole foundation is in place.
+You should be holding the password for **Bandit level 12** — this next
+stretch (12-15 or so) gets noticeably harder and often involves
+decompressing files through several layers. Take your time.
 
 # Week 4 — Version Control & Services
 
@@ -676,6 +687,8 @@ side project to a company with thousands of engineers, nearly
 everything gets tracked this way. Git specifically was created in 2005
 by Linus Torvalds — the same person who created Linux itself.
 
+**🎯 Apply it:** Bandit level 13.
+
 **Check yourself:** what's the difference between `git add` and `git
 commit`? Why are they two separate steps instead of one?
 
@@ -710,6 +723,8 @@ controversy) specifically because "is my service actually running, and
 will it restart itself if it dies" needed a real, reliable answer —
 silent service death used to be a genuinely common, hard-to-diagnose
 cause of downtime.
+
+**🎯 Apply it:** Bandit level 14.
 
 **Check yourself:** if you ran `sudo systemctl disable docker` right
 now, would Docker stop immediately?
@@ -761,6 +776,8 @@ sudo systemctl daemon-reload
 "self-healing" infrastructure — the same underlying idea (if it dies,
 bring it back automatically, without a human) scales all the way up to
 what Kubernetes does for entire fleets of containers in production.
+
+**🎯 Apply it:** Bandit level 15.
 
 **Check yourself:** what does `Restart=always` protect against that a
 plain script run by hand doesn't?
@@ -817,6 +834,10 @@ restoring them" is a genuinely common and painful lesson learned the
 hard way — a backup you haven't tested restoring isn't a real backup.
 You just did both halves, in the right order.
 
+**🎯 Apply it:** Bandit level 16 — this one involves connecting to a
+range of ports to find the right one; `nc` or `openssl s_client` are
+worth reading up on if you haven't used them yet.
+
 **Check yourself:** why did this exercise have you delete
 `important-data` and restore it from the archive, instead of just
 trusting that the `tar` command exited without an error?
@@ -835,6 +856,8 @@ trusting that the `tar` command exited without an error?
 4. Why does a backup you've never tested restoring not really count as
    a backup?
 5. What's the practical difference between `tar` and `rsync`?
+
+You should be holding the password for **Bandit level 17**.
 
 # Week 5 — Networking
 
@@ -867,6 +890,14 @@ networking misconfiguration (BGP routing) — the same category of "what
 can actually reach what, and why" question you're practicing here,
 just playing out at planetary scale instead of one sandbox box.
 
+**🎯 Apply it:** Bandit level 17 — this one has you `diff` two files to
+find what changed; a nice pairing with today's "what's actually
+different here" theme.
+
+**Optional, if you want more than one platform this week:** search
+TryHackMe for a free room on basic networking — a nice comparison point
+for how a different platform explains the same ideas.
+
 **Check yourself:** what's the difference between "is this port open"
 and "is this domain reachable at all"?
 
@@ -895,6 +926,10 @@ the firewall" is one of the single most common mistakes junior
 engineers make — genuinely a rite of passage. You now know the exact
 rule (allow SSH *before* enabling) that prevents it.
 
+**🎯 Apply it:** Bandit level 18 — this one throws something unexpected
+at you the moment you log in; read the problem carefully before
+reacting.
+
 **Self-check:** `bash ~/training/check_day18.sh` (read-only, makes no
 changes)
 
@@ -915,19 +950,7 @@ from a *second* terminal before closing your first one.
    a firewall on a remote box, and why?
 4. What does `dig` show you that `curl` doesn't?
 
-## 🔗 External checkpoint: OverTheWire Bandit, levels 19-25
-
-**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
-(continue from your saved progress)
-
-**Do this:** levels **19 to 25** lean heavily on networking — ports,
-`nc` (netcap), talking to services directly over a raw connection —
-exactly what Week 5 just covered. Some of these will take real
-persistence; that's normal at this depth.
-
-**Come back and tell me:** how it felt applying `ss`/networking
-concepts against a genuinely unfamiliar box, versus this sandbox where
-you already know what's running.
+You should be holding the password for **Bandit level 19**.
 
 # Week 6 — Docker Deep Dive
 
@@ -964,6 +987,9 @@ reshaped how software gets shipped, specifically because "works on my
 machine, breaks in production" had been such a chronic, expensive
 problem for decades — a `Dockerfile` is a machine-checkable answer to
 "exactly what does this environment need."
+
+**🎯 Apply it:** Bandit level 19 — a program running with elevated
+privileges hands you a shortcut here, if you can find it.
 
 **Check yourself:** why is `docker run --rm mycowsay` faster on repeat
 runs than `docker run --rm ubuntu` + installing cowsay each time?
@@ -1005,6 +1031,8 @@ forgetting it's disposable and storing important data directly inside
 it instead of a volume — is one of the most common real mistakes
 beginners make with Docker, usually discovered the hard way when the
 container gets recreated and the data is just gone.
+
+**🎯 Apply it:** Bandit level 20.
 
 **Check yourself:** what would have happened in the volume example if
 you'd used two *different* volume names instead of `mydata` both
@@ -1052,6 +1080,13 @@ descendant, Kubernetes YAML) is genuinely how a huge share of real
 production infrastructure is described today — this is not a toy
 format, it's the same shape of file running actual companies' backends.
 
+**🎯 Apply it:** Bandit level 21 — cron shows up again here, from a
+different angle than Day 12.
+
+**Optional, if you want a deeper Docker detour this week:** search
+KodeKloud for their free Docker labs — multi-stage builds and registry
+concepts go beyond what this course covers.
+
 **Check yourself:** if `web`'s code needed to talk to `redis`, what
 hostname would it use — an IP address, or just `redis`?
 
@@ -1070,27 +1105,7 @@ compose up -d` is still active)
 4. What's the actual advantage of a `docker-compose.yml` file over
    several separate `docker run` commands?
 
-## 🔗 External checkpoint: KodeKloud free Docker labs
-
-**Go here:** [kodekloud.com](https://kodekloud.com/) — look for their
-free Docker course/labs (their catalog changes over time, so search
-"Docker" once you're on the site).
-
-**What it is:** guided, browser-based labs — no need to set anything
-up locally — that go deeper into Docker than this course did:
-multi-stage builds, registries, and more realistic multi-container
-setups than the nginx+redis demo from Day 21.
-
-**Do this:** work through whatever free Docker labs are currently
-available. This is intentionally open-ended — the goal is repetition
-and seeing Docker used in a slightly different style than this course's
-examples, not a specific checklist. Week 9 comes back to this platform
-for a full pass through everything free it offers — this first visit
-is just to get oriented.
-
-**Come back and tell me:** one thing they did differently from how this
-course explained it — comparing explanations is a great way to make an
-idea actually stick.
+You should be holding the password for **Bandit level 22**.
 
 # Week 7 — Security
 
@@ -1120,6 +1135,13 @@ password-based brute-force campaigns are constant and automated —
 bots try common username/password combinations against essentially
 every public IP, all day, every day. Key-only makes that entire class
 of attack irrelevant.
+
+**🎯 Apply it:** Bandit level 22 — a cron job is doing something on a
+schedule here; go find out what.
+
+**Optional, if you want a second platform this week:** search
+TryHackMe for a free room on SSH or Linux security fundamentals —
+security-flavored practice pairs well with today's material.
 
 **Check yourself:** what extra risk would `PasswordAuthentication yes`
 open up, given this box is reachable from the whole internet?
@@ -1151,6 +1173,9 @@ every public IPv4 address around the clock, sandbox or not — this
 isn't paranoia, it's baseline hygiene for anything internet-facing.
 Check your own `sshd` jail status above; it's a genuinely eye-opening
 first look at how much automated noise a plain public IP attracts.
+
+**🎯 Apply it:** Bandit level 23 — another cron-adjacent level; the
+previous level's answer is your way in here.
 
 **Check yourself:** why does fail2ban matter *in addition to* key-only
 SSH auth from Day 22, not instead of it?
@@ -1184,6 +1209,10 @@ patient log analysis, not caught in real time. Calmly reading logs
 after something's already gone wrong is one of the most valuable and
 most underrated skills in this entire field.
 
+**🎯 Apply it:** Bandit level 24 — a brute-force-by-script level; this
+is a good excuse to write a small loop instead of trying passwords by
+hand.
+
 **Check yourself:** if you saw 50 failed password attempts from one IP
 in the last hour, what would you check or do next, based on Days 18 and
 23?
@@ -1201,23 +1230,10 @@ in the last hour, what would you check or do next, based on Days 18 and
 4. Name two log sources you'd check first if you suspected someone was
    trying to break into this box.
 
-## 🔗 External checkpoint: TryHackMe "Linux Fundamentals"
-
-**Go here:** [tryhackme.com](https://tryhackme.com/) — search for the
-"Linux Fundamentals" room path (has a free tier).
-
-**What it is:** guided, more security-flavored Linux practice than
-Bandit — a natural next step now that Week 7's hardening/fail2ban/log
-material gives you the context to appreciate *why* the security-focused
-exercises matter, not just how to run the commands. This first visit is
-just to get started; Week 9 comes back to finish the whole path
-properly.
-
-**Come back and tell me:** how the security framing felt different from
-the purely "how do I use this tool" framing earlier in this course —
-that shift in mindset is the actual point of Week 7. Bandit's next
-stretch — level 26 onward, into real privilege-escalation territory —
-is waiting for you in Week 9.
+You should be holding the password for **Bandit level 25**. From here
+through the low 30s, Bandit gets genuinely hard — expect some levels to
+take more than one sitting. That's the design, not a sign you're
+behind.
 
 # Week 8 — Guru Capstones
 
@@ -1233,6 +1249,10 @@ Pick one and work it out using everything from Weeks 1-7:
 - **Who's logged in, and when?** — `last -x`.
 
 Write down what you found and why — that's the actual exercise.
+
+**🎯 Apply it:** Bandit levels 26 and 27 — 27 involves a git repository
+with history worth digging through, foreshadowing Day 27's networking
+capstone nicely.
 
 ---
 
@@ -1262,6 +1282,9 @@ still gets deployed today, no fancier than what you just did. There's
 real satisfaction in knowing that a "simple" personal blog or small
 business site is, underneath, doing roughly this.
 
+**🎯 Apply it:** Bandit levels 28 and 29 — more git archaeology; look
+for things that were deleted or changed, not just what's there now.
+
 **Check yourself:** if `curl -I http://localhost` works from *on* the
 box but the page isn't reachable from your own laptop's browser using
 the public IP, which of the three steps above would you suspect first?
@@ -1286,6 +1309,10 @@ OpenVPN and IPsec. The `vpn-server` box mentioned elsewhere in this
 project actually runs OpenVPN; building WireGuard here will give you a
 genuine point of comparison between the two.
 
+**🎯 Apply it:** Bandit levels 30 and 31 — 31 wants you to interact with
+`git` in a way that isn't just `add`/`commit`; read the repository's own
+instructions carefully.
+
 ---
 
 ## Day 28 — Capstone: tie it all together
@@ -1309,90 +1336,58 @@ whole course — scripting, error handling, cron, systemd, networking —
 feeds into this one capstone. That's not a coincidence; it's genuinely
 how these pieces fit together in real infrastructure.
 
----
+**🎯 Apply it:** Bandit levels 32 and 33 — the final two. Level 33 is
+the last one; solving it means you've finished all 34 levels (0
+through 33) of the wargame, entirely spread across this course, one day
+at a time.
 
 ---
 
-# Week 9 — External Mastery
+## Week 8 Review — before the final day
 
-Everything up to here was building the foundation. These four days have
-no new material from this course — the whole point is that you no
-longer need it. Each one sends you to fully finish something you only
-sampled earlier, using nothing but skills you already have. This is
-where "completed the course" turns into "proven, outside this one box,
-that it actually stuck."
-
-## Day 29 — Finish OverTheWire Bandit, levels 26 through 34
-
-**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
-
-**Do this:** finish the wargame. This final stretch is genuinely hard —
-expect git repository archaeology, cron-based traps, private key
-recovery, and light privilege escalation. Take it slowly, level by
-level; some may take multiple sessions. That's expected, not a sign
-you're behind.
-
-**Come back and tell me:** which level was the hardest, and walk me
-through how you eventually solved it — explaining a solved problem out
-loud is one of the best ways to confirm you actually understood it
-(not just stumbled into the answer).
-
-**Self-check:** none — this one's genuinely unverifiable from here,
-self-report with `course.sh done 29` once you've reached level 34.
+1. What three separate skills from earlier weeks combined into Day 26's
+   deployment?
+2. What's genuinely different about WireGuard compared to older VPN
+   protocols like OpenVPN?
+3. In Day 28's health-check script, what would `set -e` actually protect
+   against?
+4. Looking back at Bandit level 0 versus level 33 — what changed about
+   *how* you approached an unfamiliar problem, not just what commands
+   you used?
 
 ---
 
-## Day 30 — Finish the TryHackMe "Linux Fundamentals" path
+# Week 9 — Final Skills Test
 
-**Go here:** [tryhackme.com](https://tryhackme.com/)
+## Day 29 — One platform, no hand-holding
 
-**Do this:** complete every room in the Linux Fundamentals path, not
-just the first one you tried back in Week 7. Take notes on anything
-that used a tool or concept this course didn't cover — that's your own
-personal "next things to look up" list.
+**Objective:** prove the whole foundation transfers to a platform this
+course had no part in building.
 
-**Come back and tell me:** what (if anything) came up that wasn't in
-this course at all — that's genuinely useful signal for what to add
-next.
+**Go here:** [tryhackme.com](https://tryhackme.com/) — search for the
+"Linux Fundamentals" room path (free tier). If you sampled a room back
+on Day 22, pick up from there; otherwise start fresh.
 
-**Self-check:** none — mark it yourself with `course.sh done 30` once
-the path is complete.
+**Do this:** complete the path, start to finish. Unlike every day
+before this one, there's no "Do this" command list — figuring out what
+each room needs *is* the exercise, using nothing but 28 days of
+built-up instinct. Where it uses a tool this course didn't cover,
+that's useful signal, not a gap you failed to close — note it down.
 
----
+**Come back and tell me:**
+- What (if anything) came up that this course never touched.
+- Whether it felt meaningfully easier than it would have a month or two
+  ago — that comparison is the actual point of this whole day.
 
-## Day 31 — Finish the KodeKloud free Docker labs
-
-**Go here:** [kodekloud.com](https://kodekloud.com/)
-
-**Do this:** work through everything free their Docker catalog currently
-offers, start to finish — not just a sample this time. Pay particular
-attention to anything involving multi-stage builds, registries, or
-orchestration concepts that go beyond Week 6's Compose material.
-
-**Come back and tell me:** whether anything there changed how you'd
-approach the `Dockerfile` you wrote back on Day 19 — a good sign the
-extra practice actually taught you something new, not just repetition.
-
-**Self-check:** none — mark it yourself with `course.sh done 31`.
-
----
-
-## Day 32 — Where to go from here (open-ended, optional)
-
-**Objective:** point yourself at what's next, now that the fundamentals
-are genuinely solid.
-
-If you want more of what Bandit gave you, OverTheWire has several other
-free wargames worth knowing about: **Natas** (web application security),
+**If you want more after this:** OverTheWire has other free wargames in
+the same style as Bandit — **Natas** (web application security),
 **Leviathan** (beginner-friendly binary/exploitation basics), and
-**Krypton** (cryptography puzzles) are the natural next steps — all at
-the same site, same style, no signup.
+**Krypton** (cryptography puzzles). KodeKloud's free Docker labs are
+also worth a fuller pass if Day 21's optional detour interested you.
+None of that is required — this course is complete either way.
 
-This day has no fixed exercise — it's a prompt to come back to a Claude
-session and talk through what genuinely interested you most across this
-whole course (security? automation? Docker/orchestration? networking?)
-so the *next* course can be scoped around that, the same way this one
-was scoped around "zero to guru" at the start.
+**Self-check:** none — this one's genuinely unverifiable from here.
+Self-report with `course.sh done 29` once you've finished the path.
 
 ---
 
@@ -1402,11 +1397,11 @@ You've now covered real sysadmin fundamentals end to end — shell,
 permissions, environment variables, users, processes, packages, text
 wrangling, scripting with real error handling, git, backups, cron,
 systemd, networking, firewalls, Docker (including Compose), and
-security hardening — plus two real deployed capstones, and full
-completions of three respected external platforms (OverTheWire Bandit,
-TryHackMe Linux Fundamentals, KodeKloud Docker labs). That combination
-— built-here fundamentals *and* proven against material this project
-didn't write — is a genuinely solid, credible foundation. Natural next
-directions from here: Ansible (automating server setup itself), a
-proper CI/CD pipeline, Kubernetes, or one of the wargames from Day 32.
-Ask when you get there.
+security hardening — plus two real deployed capstones, all 34 levels of
+OverTheWire Bandit solved incrementally alongside the material, and a
+final proof-it-transfers test on a platform this course didn't write.
+That combination — built-here fundamentals *and* proven against
+material this project didn't script — is a genuinely solid, credible
+foundation. Natural next directions from here: Ansible (automating
+server setup itself), a proper CI/CD pipeline, Kubernetes, or one of
+the wargames mentioned in Day 29. Ask when you get there.
