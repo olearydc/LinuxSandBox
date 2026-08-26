@@ -17,15 +17,19 @@ TITLES=(
   "Finding your way around"
   "Files, permissions, ownership"
   "Text editors: nano and vim"
+  "Environment variables and PATH"
   "Users and groups"
   "Processes"
   "Installing software"
   "Pipes, grep, and find"
   "Regex basics with grep and sed"
   "Shell scripting basics"
+  "Bash error handling: set -e and trap"
   "Scheduling with cron"
+  "Git basics"
   "systemd and services"
   "Write your own systemd service"
+  "Backups: tar and rsync"
   "Networking basics"
   "Firewall"
   "Building your own images"
@@ -152,9 +156,10 @@ case "$1" in
 
    Awarded to: the linux-sandbox admin
 
-   For completing all 24 days: shell fundamentals,
-   permissions, users, processes, packages, text
-   wrangling, scripting, cron, systemd, networking,
+   For completing all 28 days: shell fundamentals,
+   permissions, environment variables, users, processes,
+   packages, text wrangling, scripting with real error
+   handling, git, cron, systemd, backups, networking,
    firewalls, Docker (incl. Compose), SSH hardening,
    fail2ban, log auditing, and real deployed capstones.
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "=== Day 17 self-check: Docker Compose ==="
+echo "=== Day 21 self-check: Docker Compose ==="
 pass=true
 
 cd ~/training/compose-demo 2>/dev/null || { echo "[FAIL] ~/training/compose-demo not found"; exit 1; }

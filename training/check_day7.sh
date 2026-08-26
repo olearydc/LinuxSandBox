@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "=== Day 6 self-check: package management ==="
+echo "=== Day 7 self-check: package management ==="
 
 if dpkg -l | grep -q "^ii  cowsay"; then
   echo "[PASS] cowsay is installed"

@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "=== Day 19 self-check: fail2ban ==="
+echo "=== Day 23 self-check: fail2ban ==="
 pass=true
 
 if dpkg -l | grep -q "^ii  fail2ban"; then

@@ -1,16 +1,32 @@
 #!/bin/bash
-echo "=== Day 10 self-check: cron ==="
+echo "=== Day 10 self-check: shell scripting ==="
+pass=true
+script=~/training/myscript.sh
 
-cron_active=$(crontab -l 2>/dev/null | grep -c "cron_log.txt")
-if [ "$cron_active" -gt 0 ]; then
-  echo "[PASS] a crontab entry writing to cron_log.txt is currently active"
-  echo "       (remember to run 'crontab -r' when you're done, or it'll run forever)"
-elif [ -f ~/training/cron_log.txt ] && [ -s ~/training/cron_log.txt ]; then
-  echo "[INFO] no active crontab entry right now, but cron_log.txt has content --"
-  echo "       looks like you already did the exercise and cleaned up with 'crontab -r'. Good."
-  echo "       Last few lines:"
-  tail -3 ~/training/cron_log.txt
+if [ -f "$script" ]; then
+  echo "[PASS] $script exists"
 else
-  echo "[FAIL] no active crontab entry and no cron_log.txt found -- redo the exercise:"
-  echo "       echo '* * * * * echo \"cron ran at \$(date)\" >> ~/training/cron_log.txt' | crontab -"
+  echo "[FAIL] $script not found"
+  pass=false
 fi
+
+if [ -x "$script" ]; then
+  echo "[PASS] $script is executable"
+else
+  echo "[FAIL] $script is not executable -- run: chmod +x $script"
+  pass=false
+fi
+
+if $pass; then
+  echo "Running it now to confirm it actually works..."
+  rm -rf ~/demo
+  cd ~ && "$script"
+  if [ -d ~/demo ] && [ "$(ls ~/demo | wc -l)" -eq 3 ]; then
+    echo "[PASS] script created ./demo with 3 files as expected"
+  else
+    echo "[FAIL] script ran but ./demo doesn't have exactly 3 files"
+    pass=false
+  fi
+fi
+
+if $pass; then echo "All checks passed. Nice work."; else echo "Some checks failed -- see notes above."; fi

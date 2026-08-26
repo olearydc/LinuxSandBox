@@ -1,6 +1,6 @@
 # Linux Learning Path — Zero to Guru
 
-An 8-week, 24-day training course for the `linux-sandbox` box. No prior
+An 8-week, 28-day training course for the `linux-sandbox` box. No prior
 Linux knowledge assumed beyond what you've already done in this
 project (SSH in, run `docker run`).
 
@@ -10,6 +10,8 @@ project (SSH in, run `docker run`).
   tell if it worked (your exact numbers/names will differ — the
   *shape* of the output is what matters)
 - **What's happening / why** — the reasoning, not just the syntax
+- **🌍 In the real world** — how this actually shows up in real
+  incidents and real practice, not just theory
 - **Check yourself** — a question to answer in your own words *before*
   moving on
 - **Self-check** — where a script on the instance can verify your work
@@ -18,17 +20,18 @@ project (SSH in, run `docker run`).
 **Where to practice:** unless marked **(host)**, work inside a
 disposable container: `docker run -it --rm ubuntu bash` (see
 [USE_ME.md](USE_ME.md)). **(host)** days need the real machine —
-users, systemd, cron, and networking don't exist in a bare container.
+users, systemd, cron, git history, and real networking don't exist in
+a bare container.
 
 **Pace:** there is no deadline here. ~3 days a week gets you through
-this in about 8 weeks, but if that feels rushed, go slower — 1 day a
-week is a perfectly good pace and just means ~6 months, which is fine.
-Any day with more than one exercise can be split across two sessions —
-do the first exercise, stop, come back later for the rest of that same
-day. Understanding beats speed every time; the self-checks and weekly
-reviews aren't graded on how fast you got there. Come back anytime and
-say "day N" — I'll walk through it live, answer questions, and check
-your work.
+this in about 9-10 weeks, but if that feels rushed, go slower — 1 day a
+week is a perfectly good pace and just means several months, which is
+fine. Any day with more than one exercise can be split across two
+sessions — do the first exercise, stop, come back later for the rest of
+that same day. Understanding beats speed every time; the self-checks
+and weekly reviews aren't graded on how fast you got there. Come back
+anytime and say "day N" — I'll walk through it live, answer questions,
+and check your work.
 
 ---
 
@@ -163,6 +166,72 @@ and `notes2.txt` exist with the expected content.
 
 ---
 
+## Day 4 — Environment variables and `$PATH` **(host)**
+
+**Objective:** understand how the shell finds commands and stores
+settings — this explains a huge chunk of "why doesn't this work" bugs
+you'll hit for the rest of your Linux life.
+
+**Do this:**
+```bash
+echo $HOME
+echo $PATH
+export MY_NAME="trainee"
+echo $MY_NAME
+which ls
+```
+**You should see:** your home directory, a colon-separated list of
+directories, `trainee`, and the full path to the `ls` binary (something
+like `/usr/bin/ls`).
+
+**What's happening / why:** environment variables are named values
+available to your shell and anything it runs. `$PATH` is a special
+one: a list of directories the shell searches, in order, whenever you
+type a bare command name — that's literally how `which ls` finds it.
+`export` makes a variable visible to child processes too, not just your
+current shell.
+
+**Try this (safe to break — it only affects your current session):**
+```bash
+PATH=""
+ls
+```
+**You should see:** `bash: ls: command not found` — even though the
+`ls` program is still sitting right there on disk. Close and reopen
+your terminal (or just log back in) to get a normal `$PATH` back.
+
+**What's happening / why:** this proves `$PATH` — not the file's
+existence — is what makes a command findable by name. If `$PATH`
+doesn't include the folder a program lives in, typing its name fails,
+even though running it by full path (`/usr/bin/ls`) would still work
+fine.
+
+**Now make a variable persist across every future login:**
+```bash
+echo 'export TRAINING_ENV="sandbox"' >> ~/.bashrc
+source ~/.bashrc
+echo $TRAINING_ENV
+```
+**You should see:** `sandbox`
+
+**What's happening / why:** `.bashrc` runs every time you open a new
+shell — anything `export`ed there becomes permanent, not just for this
+session. `source` re-runs it immediately instead of waiting for your
+next login (this is exactly the trick used to activate the `docker`
+group and the login banner earlier in this project).
+
+**🌍 In the real world:** "command not found" despite software clearly
+being installed is one of the most common early points of confusion —
+the overwhelming majority of the time it's a `$PATH` problem, not a
+broken install.
+
+**Check yourself:** if you installed a program but typing its name
+gives `command not found`, what two things would you check first?
+
+**Self-check:** `bash ~/training/check_day4.sh`
+
+---
+
 ## Week 1 Review — before moving on
 
 Answer these from memory, no looking back. Bring your answers to a
@@ -174,12 +243,11 @@ where slow-and-steady pays off, not a formality to skip.
 3. In vim, what's the fastest way to abandon changes and quit without
    saving?
 4. What's the difference between Normal mode and Insert mode in vim?
-5. If you forgot every vim shortcut except one, which one should it be,
-   and why?
+5. What is `$PATH`, and what breaks if a directory isn't in it?
 
 # Week 2 — Multi-User Linux
 
-## Day 4 — Users and groups **(host)**
+## Day 5 — Users and groups **(host)**
 
 **Objective:** understand multi-user Linux for real.
 
@@ -208,11 +276,11 @@ what `-aG` protects against) and quietly strips someone's real access.
 
 **Check yourself:** why `-aG` and not just `-G`?
 
-**Self-check:** `bash ~/training/check_day4.sh`
+**Self-check:** `bash ~/training/check_day5.sh`
 
 ---
 
-## Day 5 — Processes
+## Day 6 — Processes
 
 **Objective:** see what's running and control it.
 
@@ -245,7 +313,7 @@ something?
 
 ---
 
-## Day 6 — Installing software **(host)**
+## Day 7 — Installing software **(host)**
 
 **Objective:** get fluent with the package manager.
 
@@ -274,7 +342,7 @@ install is you trusting that the maintainer's code does what it says.
 **Check yourself:** what's the difference between `apt remove cowsay`
 and `apt purge cowsay`?
 
-**Self-check:** `bash ~/training/check_day6.sh`
+**Self-check:** `bash ~/training/check_day7.sh`
 
 ---
 
@@ -288,9 +356,30 @@ and `apt purge cowsay`?
 4. What does `apt update` actually do — and what does it *not* do?
 5. What's the difference between `apt remove` and `apt purge`?
 
+## 🔗 External checkpoint: OverTheWire Bandit, levels 0-8
+
+**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
+(free, no signup required)
+
+**What it is:** a famous, gamified "wargame" — each level is a real SSH
+login where the password to the *next* level is hidden somewhere you
+have to find using exactly what you've learned so far: navigation,
+`ls -la`, permissions, `find`, reading files. Level 0's connection
+details and starting password are right there on the page.
+
+**Do this:** work through **levels 0 to 8** — that's the range that
+matches Weeks 1-2 of this course. Don't rush past a level you had to
+guess your way through; if you didn't understand *why* a command
+worked, that's worth more than the password itself.
+
+**Come back and tell me:** which level gave you the most trouble, and
+why. If you get properly stuck on one, that's a great thing to bring
+to a Claude session — talking through *why* a level isn't working
+teaches more than the answer would.
+
 # Week 3 — Text Wrangling & Automation
 
-## Day 7 — Pipes, grep, and find
+## Day 8 — Pipes, grep, and find
 
 **Objective:** combine small tools instead of memorizing giant ones.
 
@@ -323,7 +412,7 @@ many processes are currently running — without creating a file.
 
 ---
 
-## Day 8 — Regex basics with grep and sed
+## Day 9 — Regex basics with grep and sed
 
 **Objective:** search and replace by *pattern*, not just exact text.
 
@@ -358,7 +447,7 @@ differently from the command above?
 
 ---
 
-## Day 9 — Shell scripting basics
+## Day 10 — Shell scripting basics
 
 **Objective:** write it once, run it forever.
 
@@ -392,11 +481,76 @@ company. It's rarely glamorous, but it's genuinely everywhere.
 **Check yourself:** what error would you get running the script
 *without* `chmod +x` first?
 
-**Self-check:** `bash ~/training/check_day9.sh`
+**Self-check:** `bash ~/training/check_day10.sh`
 
 ---
 
-## Day 10 — Scheduling with cron **(host)**
+## Day 11 — Bash error handling: `set -e` and `trap` **(host)**
+
+**Objective:** make scripts fail loudly and predictably instead of
+quietly limping on after something breaks.
+
+**Do this:** create `~/training/risky.sh`:
+```bash
+#!/bin/bash
+mkdir /this/path/does/not/exist
+echo "This line still runs even though the mkdir above failed!"
+```
+```bash
+chmod +x ~/training/risky.sh
+~/training/risky.sh
+```
+**You should see:** the `mkdir` error printed, **and then** the echo
+line prints anyway — proving bash just plows ahead after a failure by
+default.
+
+**Now create `~/training/safe_script.sh`:**
+```bash
+#!/bin/bash
+set -e
+mkdir /this/path/does/not/exist
+echo "This line should never print"
+```
+```bash
+chmod +x ~/training/safe_script.sh
+~/training/safe_script.sh
+```
+**You should see:** just the error — the script stops immediately, the
+echo line never runs.
+
+**What's happening / why:** `set -e` tells bash to stop the entire
+script the instant any command fails (returns a non-zero exit code),
+instead of logging the error and continuing. This turns silent partial
+failures into loud, immediate, obvious ones.
+
+**One more piece — `trap`:**
+```bash
+#!/bin/bash
+set -e
+trap 'echo "Something failed on line $LINENO"' ERR
+mkdir /this/path/does/not/exist
+```
+**What's happening / why:** `trap` runs a command automatically when a
+condition occurs — here, `ERR` fires whenever a command fails. This is
+a small taste of the same idea behind real alerting systems: don't just
+fail, *say something* when you fail.
+
+**🌍 In the real world:** unchecked failures inside deployment scripts
+have caused real production outages — one step silently fails, the
+script barrels on as if nothing happened, and the system ends up in a
+half-updated, broken state. `set -e` (and its stricter cousin
+`set -euo pipefail`) is close to a default best practice for any bash
+script that matters.
+
+**Check yourself:** what's the practical difference in behavior
+between `risky.sh` and `safe_script.sh`, and why would that matter for
+a real deployment script?
+
+**Self-check:** `bash ~/training/check_day11.sh`
+
+---
+
+## Day 12 — Scheduling with cron **(host)**
 
 **Objective:** make something run automatically, without you.
 
@@ -433,7 +587,7 @@ you're about to, is a genuine habit worth keeping.
 
 **Check yourself:** what would `0 3 * * *` mean instead of `* * * * *`?
 
-**Self-check:** `bash ~/training/check_day10.sh` (run it *before*
+**Self-check:** `bash ~/training/check_day12.sh` (run it *before*
 `crontab -r`, while the job is still active, to see it confirmed)
 
 ---
@@ -446,12 +600,82 @@ you're about to, is a genuine habit worth keeping.
 3. What does the `g` flag do at the end of a `sed 's/.../.../ g'`
    command that's missing without it?
 4. What does the shebang line (`#!/bin/bash`) actually do?
-5. In a cron schedule `* * * * *`, what do the five fields mean, in
+5. What does `set -e` change about how a script behaves after a
+   command fails?
+6. In a cron schedule `* * * * *`, what do the five fields mean, in
    order?
 
-# Week 4 — Services
+## 🔗 External checkpoint: OverTheWire Bandit, levels 9-18
 
-## Day 11 — systemd and services **(host)**
+**Go here:** [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/)
+(continue from wherever you left off — your progress is just "which
+level's password do I currently have," there's no account to lose)
+
+**Do this:** levels **9 to 18** lean much more heavily on `grep`,
+`find` with more advanced flags, and basic scripting logic — exactly
+Week 3's material. This range is noticeably harder than 0-8; that's
+expected, and a good sign you're past the easy part.
+
+**Come back and tell me:** if any level took you more than 15-20
+minutes of genuine effort, it's worth reviewing here rather than just
+moving on once you've solved it.
+
+# Week 4 — Version Control & Services
+
+## Day 13 — Git basics **(host)**
+
+**Objective:** track changes to files over time — the exact tool this
+project's own docs and scripts are managed with.
+
+**Do this:**
+```bash
+mkdir -p ~/training/git-practice && cd ~/training/git-practice
+git init
+git config --global user.email "you@example.com"
+git config --global user.name "Trainee"
+echo "hello git" > notes.txt
+git add notes.txt
+git commit -m "first commit"
+git log --oneline
+```
+**You should see:** an "initialized empty Git repository" message,
+then a log with one line like `a1b2c3d first commit`.
+
+**What's happening / why:** `git init` creates a new repository (a
+hidden `.git` folder tracking history). `git add` **stages** a file —
+marks it to be included in the *next* commit. `git commit` actually
+saves a snapshot with a message. `git log` shows the history of
+snapshots. This exact workflow — init, add, commit — is how the
+`linux-sandbox` project's own docs and scripts are tracked, right on
+your local machine.
+
+**Try it — see history in action:**
+```bash
+echo "a second line" >> notes.txt
+git status
+git diff
+git add notes.txt
+git commit -m "add a second line"
+git log --oneline
+```
+**You should see:** `git status` flags the file as modified, `git diff`
+shows exactly what changed (a `+` line), and after committing, `git
+log` now shows two commits.
+
+**🌍 In the real world:** version control is arguably the single most
+universally used tool in professional software work — from a two-person
+side project to a company with thousands of engineers, nearly
+everything gets tracked this way. Git specifically was created in 2005
+by Linus Torvalds — the same person who created Linux itself.
+
+**Check yourself:** what's the difference between `git add` and `git
+commit`? Why are they two separate steps instead of one?
+
+**Self-check:** `bash ~/training/check_day13.sh`
+
+---
+
+## Day 14 — systemd and services **(host)**
 
 **Objective:** understand how background services are managed for
 real — what's keeping `sshd` and `docker` alive.
@@ -482,11 +706,11 @@ cause of downtime.
 **Check yourself:** if you ran `sudo systemctl disable docker` right
 now, would Docker stop immediately?
 
-**Self-check:** `bash ~/training/check_day11.sh`
+**Self-check:** `bash ~/training/check_day14.sh`
 
 ---
 
-## Day 12 — Write your own systemd service **(host)**
+## Day 15 — Write your own systemd service **(host)**
 
 **Objective:** go from *using* services to *creating* one.
 
@@ -533,26 +757,80 @@ what Kubernetes does for entire fleets of containers in production.
 **Check yourself:** what does `Restart=always` protect against that a
 plain script run by hand doesn't?
 
-**Self-check:** `bash ~/training/check_day12.sh` (run while the service
+**Self-check:** `bash ~/training/check_day15.sh` (run while the service
 is still active, before cleanup)
+
+---
+
+## Day 16 — Backups: `tar` and `rsync` **(host)**
+
+**Objective:** know how to actually protect and recover data — not
+just create it.
+
+**Do this:**
+```bash
+mkdir -p ~/important-data
+echo "precious file" > ~/important-data/file1.txt
+tar -czvf ~/training/backup-$(date +%Y%m%d).tar.gz -C ~ important-data
+ls -lh ~/training/backup-*.tar.gz
+```
+**You should see:** `tar`'s verbose file listing while it archives,
+then your `.tar.gz` file listed with its size.
+
+**What's happening / why:** `tar` bundles files/directories into one
+archive. `-c` create, `-z` gzip-compress, `-v` verbose (list files as
+it works), `-f` the output filename. `-C ~` tells tar to change into
+your home directory *first*, so the archive stores a clean relative
+`important-data/` path instead of an ugly absolute one.
+
+**Now prove the backup actually works — restore it:**
+```bash
+rm -rf ~/important-data
+tar -xzvf ~/training/backup-*.tar.gz -C ~
+cat ~/important-data/file1.txt
+```
+**You should see:** `precious file` printed — proof the backup was
+real and restorable, not just something that ran without erroring.
+
+**One more tool — `rsync`, for syncing instead of archiving:**
+```bash
+mkdir -p ~/important-data-copy
+rsync -av ~/important-data/ ~/important-data-copy/
+ls ~/important-data-copy/
+```
+**What's happening / why:** `rsync` copies efficiently, transferring
+only what's changed on repeat runs — this is the tool real backup
+systems and deployment pipelines use under the hood, not a
+copy-paste toy. `-a` = archive mode (preserves permissions and
+timestamps), `-v` = verbose.
+
+**🌍 In the real world:** "we had backups, but never actually tested
+restoring them" is a genuinely common and painful lesson learned the
+hard way — a backup you haven't tested restoring isn't a real backup.
+You just did both halves, in the right order.
+
+**Check yourself:** why did this exercise have you delete
+`important-data` and restore it from the archive, instead of just
+trusting that the `tar` command exited without an error?
+
+**Self-check:** `bash ~/training/check_day16.sh`
 
 ---
 
 ## Week 4 Review — before moving on
 
-1. What's the difference between a service being "enabled" and being
+1. What's the difference between `git add` and `git commit`?
+2. What's the difference between a service being "enabled" and being
    "active"?
-2. What command shows you a specific service's logs, and only that
-   service's?
 3. In a systemd unit file, what does `Restart=always` actually protect
    against?
-4. What does `daemon-reload` do, and when do you need to run it?
-5. What do you type to both enable a service for next boot *and* start
-   it right now, in one command?
+4. Why does a backup you've never tested restoring not really count as
+   a backup?
+5. What's the practical difference between `tar` and `rsync`?
 
 # Week 5 — Networking
 
-## Day 13 — Networking basics **(host)**
+## Day 17 — Networking basics **(host)**
 
 **Objective:** understand what's happening when you SSH in or a
 container reaches the internet.
@@ -586,7 +864,7 @@ and "is this domain reachable at all"?
 
 ---
 
-## Day 14 — Firewall **(host)**
+## Day 18 — Firewall **(host)**
 
 **Objective:** control what can reach this box at the network level.
 
@@ -609,7 +887,7 @@ the firewall" is one of the single most common mistakes junior
 engineers make — genuinely a rite of passage. You now know the exact
 rule (allow SSH *before* enabling) that prevents it.
 
-**Self-check:** `bash ~/training/check_day14.sh` (read-only, makes no
+**Self-check:** `bash ~/training/check_day18.sh` (read-only, makes no
 changes)
 
 **Talk-it-through-live exercise (come back to a session for this):**
@@ -631,7 +909,7 @@ from a *second* terminal before closing your first one.
 
 # Week 6 — Docker Deep Dive
 
-## Day 15 — Building your own images
+## Day 19 — Building your own images
 
 **Objective:** understand what's happening underneath `docker run`.
 
@@ -670,7 +948,7 @@ runs than `docker run --rm ubuntu` + installing cowsay each time?
 
 ---
 
-## Day 16 — Volumes and networks
+## Day 20 — Volumes and networks
 
 **Objective:** make data survive a container being deleted, and let
 containers talk to each other.
@@ -712,7 +990,7 @@ times?
 
 ---
 
-## Day 17 — Docker Compose: multi-container apps **(host)**
+## Day 21 — Docker Compose: multi-container apps **(host)**
 
 **Objective:** run a real multi-service app with one command.
 
@@ -741,7 +1019,7 @@ group of containers — this is how real applications are usually
 defined (a web server + a database + a cache, etc.), instead of typing
 several long `docker run` commands by hand. `docker compose up -d`
 starts everything, networked together automatically (services can
-reach each other by name, e.g. `redis`, same idea as Day 16).
+reach each other by name, e.g. `redis`, same idea as Day 20).
 
 **Clean up when done:**
 ```bash
@@ -755,7 +1033,7 @@ format, it's the same shape of file running actual companies' backends.
 **Check yourself:** if `web`'s code needed to talk to `redis`, what
 hostname would it use — an IP address, or just `redis`?
 
-**Self-check:** `bash ~/training/check_day17.sh` (run while `docker
+**Self-check:** `bash ~/training/check_day21.sh` (run while `docker
 compose up -d` is still active)
 
 ---
@@ -770,9 +1048,29 @@ compose up -d` is still active)
 4. What's the actual advantage of a `docker-compose.yml` file over
    several separate `docker run` commands?
 
+## 🔗 External checkpoint: KodeKloud free Docker labs
+
+**Go here:** [kodekloud.com](https://kodekloud.com/) — look for their
+free Docker course/labs (their catalog changes over time, so search
+"Docker" once you're on the site).
+
+**What it is:** guided, browser-based labs — no need to set anything
+up locally — that go deeper into Docker than this course did:
+multi-stage builds, registries, and more realistic multi-container
+setups than the nginx+redis demo from Day 21.
+
+**Do this:** work through whatever free Docker labs are currently
+available. This is intentionally open-ended — the goal is repetition
+and seeing Docker used in a slightly different style than this course's
+examples, not a specific checklist.
+
+**Come back and tell me:** one thing they did differently from how this
+course explained it — comparing explanations is a great way to make an
+idea actually stick.
+
 # Week 7 — Security
 
-## Day 18 — SSH and basic hardening **(host)**
+## Day 22 — SSH and basic hardening **(host)**
 
 **Objective:** understand the security model you've relied on this
 whole project.
@@ -804,7 +1102,7 @@ open up, given this box is reachable from the whole internet?
 
 ---
 
-## Day 19 — fail2ban: automated intrusion protection **(host)**
+## Day 23 — fail2ban: automated intrusion protection **(host)**
 
 **Objective:** actively defend against brute-force login attempts.
 
@@ -831,13 +1129,13 @@ Check your own `sshd` jail status above; it's a genuinely eye-opening
 first look at how much automated noise a plain public IP attracts.
 
 **Check yourself:** why does fail2ban matter *in addition to* key-only
-SSH auth from Day 18, not instead of it?
+SSH auth from Day 22, not instead of it?
 
-**Self-check:** `bash ~/training/check_day19.sh`
+**Self-check:** `bash ~/training/check_day23.sh`
 
 ---
 
-## Day 20 — Reading the trail: logs and auditing **(host)**
+## Day 24 — Reading the trail: logs and auditing **(host)**
 
 **Objective:** answer "who did what, and when" using real logs.
 
@@ -863,8 +1161,8 @@ after something's already gone wrong is one of the most valuable and
 most underrated skills in this entire field.
 
 **Check yourself:** if you saw 50 failed password attempts from one IP
-in the last hour, what would you check or do next, based on Days 14 and
-19?
+in the last hour, what would you check or do next, based on Days 18 and
+23?
 
 ---
 
@@ -879,9 +1177,28 @@ in the last hour, what would you check or do next, based on Days 14 and
 4. Name two log sources you'd check first if you suspected someone was
    trying to break into this box.
 
+## 🔗 External checkpoint: TryHackMe "Linux Fundamentals" + Bandit 19+
+
+**Go here:** [tryhackme.com](https://tryhackme.com/) — search for the
+"Linux Fundamentals" room path (has a free tier).
+
+**What it is:** guided, more security-flavored Linux practice than
+Bandit — a natural next step now that Week 7's hardening/fail2ban/log
+material gives you the context to appreciate *why* the security-focused
+exercises matter, not just how to run the commands.
+
+**Also:** if you enjoyed Bandit earlier, level **19 onward**
+(overthewire.org/wargames/bandit) gets meaningfully harder and starts
+touching on things like SUID binaries and basic privilege escalation —
+a nice preview of security concepts beyond this course's scope.
+
+**Come back and tell me:** how the security framing felt different from
+the purely "how do I use this tool" framing earlier in this course —
+that shift in mindset is the actual point of Week 7.
+
 # Week 8 — Guru Capstones
 
-## Day 21 — Mini investigation
+## Day 25 — Mini investigation
 
 **Objective:** debug something yourself, no script gives you the
 answer.
@@ -896,7 +1213,7 @@ Write down what you found and why — that's the actual exercise.
 
 ---
 
-## Day 22 — Capstone: deploy a real service **(host)**
+## Day 26 — Capstone: deploy a real service **(host)**
 
 **Objective:** combine packages, systemd, and the firewall into one
 real, working deployment.
@@ -926,11 +1243,11 @@ business site is, underneath, doing roughly this.
 box but the page isn't reachable from your own laptop's browser using
 the public IP, which of the three steps above would you suspect first?
 
-**Self-check:** `bash ~/training/check_day22.sh`
+**Self-check:** `bash ~/training/check_day26.sh`
 
 ---
 
-## Day 23 — Capstone: WireGuard VPN **(host)**
+## Day 27 — Capstone: WireGuard VPN **(host)**
 
 **Objective:** the secondary interest from `CLAUDE.md` — self-hosting a
 VPN. By now you have the networking, packages, systemd, and firewall
@@ -948,35 +1265,35 @@ genuine point of comparison between the two.
 
 ---
 
-## Day 24 — Capstone: tie it all together
+## Day 28 — Capstone: tie it all together
 
-**Objective:** one last project combining scripting, cron, and
-systemd — build a tiny automated health-check system.
+**Objective:** one last project combining scripting, error handling,
+cron, and systemd — build a tiny automated health-check system.
 
 **Rough brief (work this out yourself, ask for help where you get
-stuck):** write a script that checks whether `nginx` (Day 22) is
-responding, logs the result with a timestamp, and — if it's down —
-attempts to restart it via `systemctl`. Schedule it with cron (Day 10)
-to run every 5 minutes. This is a simplified version of what real
-monitoring systems (Nagios, Prometheus alerting, etc.) do under the
-hood.
+stuck):** write a script (with `set -e` from Day 11 in mind) that
+checks whether `nginx` (Day 26) is responding, logs the result with a
+timestamp, and — if it's down — attempts to restart it via `systemctl`.
+Schedule it with cron (Day 12) to run every 5 minutes. This is a
+simplified version of what real monitoring systems (Nagios, Prometheus
+alerting, etc.) do under the hood.
 
 **🌍 In the real world:** you've just built a tiny version of what tools
 like Nagios (2002) and Prometheus (2012) do for a living at essentially
 every serious tech company: automated "is it up, and if not, try to
-fix it, and tell someone if you can't." Everything from this whole
-course — scripting, cron, systemd, networking — feeds into this one
-capstone. That's not a coincidence; it's genuinely how these pieces fit
-together in real infrastructure.
+fix it, and tell someone if you can't." Nearly everything from this
+whole course — scripting, error handling, cron, systemd, networking —
+feeds into this one capstone. That's not a coincidence; it's genuinely
+how these pieces fit together in real infrastructure.
 
 ---
 
 ## After this
 
 You've now covered real sysadmin fundamentals end to end: shell,
-permissions, users, processes, packages, scripting, cron, systemd,
-networking, firewalls, Docker (including Compose), and security
-hardening — plus two real deployed capstones. Natural next directions:
-Ansible (automating server setup itself), a proper CI/CD pipeline,
-Kubernetes, or going deeper on any single week above. Ask when you get
-there.
+permissions, users, processes, packages, text wrangling, scripting with
+real error handling, git, backups, cron, systemd, networking,
+firewalls, Docker (including Compose), and security hardening — plus
+two real deployed capstones. Natural next directions: Ansible
+(automating server setup itself), a proper CI/CD pipeline, Kubernetes,
+or going deeper on any single week above. Ask when you get there.

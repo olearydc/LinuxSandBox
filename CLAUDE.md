@@ -22,7 +22,7 @@ familiar. Not committed to yet — treat as something to explain and maybe
 try, not something to build unprompted.
 
 For hands-on usage instructions (SSH, Docker reset workflow, etc.), see
-[USE_ME.md](USE_ME.md). For the structured 8-week, 24-day learning
+[USE_ME.md](USE_ME.md). For the structured 8-week, 28-day learning
 curriculum, see [LEARNING.md](LEARNING.md) — pace is explicitly
 open-ended (the user is fine with this taking months; "1 day a week"
 is a stated acceptable pace, not a fallback). [GLOSSARY.md](GLOSSARY.md)
@@ -38,7 +38,7 @@ The `training/` directory (local copy in this repo, deployed to
   state (not just "did you run the command")
 - `course.sh` — progress tracker: `status` (planner — progress bar +
   streak counter), `done <N>` / `undone <N>` (marker), `test <N>`
-  (tester), `certificate` (prints a completion certificate once all 24
+  (tester), `certificate` (prints a completion certificate once all 28
   are done). A login banner (added to `~/.bashrc` on the instance)
   shows `course.sh next` automatically on every SSH login.
 

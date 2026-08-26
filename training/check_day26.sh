@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "=== Day 22 self-check: deployed nginx service ==="
+echo "=== Day 26 self-check: deployed nginx service ==="
 pass=true
 
 if systemctl is-active nginx &>/dev/null; then
