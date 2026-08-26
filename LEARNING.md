@@ -20,6 +20,11 @@ test on a different platform, to prove it all transfers.
   tell if it worked (your exact numbers/names will differ — the
   *shape* of the output is what matters)
 - **What's happening / why** — the reasoning, not just the syntax
+- **Decode it** — on days where the output has several non-obvious
+  fields (`id`, `ps aux`, `systemctl status`, `ss -tulpn`, `last -x`,
+  etc.), a field-by-field breakdown of what each part actually means —
+  so you can read real output on your own, without needing this course
+  open next to you
 - **🌍 In the real world** — how this actually shows up in real
   incidents and real practice, not just theory
 - **🎯 Apply it** — the Bandit level to solve today, applying what you
@@ -73,6 +78,37 @@ user/group IDs, and a numbered list of everything you've typed.
 file explorer window. `man` is the built-in reference for nearly every
 command — check here before searching online. `history` plus the
 **up-arrow** key means you almost never retype a command.
+
+**Decode it — `id`'s output will look like:**
+```
+uid=1001(ubuntu) gid=1001(ubuntu) groups=1001(ubuntu),4(adm),24(cdrom),27(sudo),30(dip),105(lxd),988(docker)
+```
+- **`uid=1001(ubuntu)`** — your numeric user ID is `1001`; the name
+  `ubuntu` is just a label looked up from `/etc/passwd`. Everything
+  under the hood is tracked by number, not name. `0` is always root;
+  low numbers (roughly 1-999) are reserved for system/service accounts
+  created automatically; real human accounts conventionally start at
+  `1000`. So `1001` is a small clue that this was likely the *second*
+  human account ever created on this box.
+- **`gid=1001(ubuntu)`** — your primary group, confusingly also
+  numbered and named the same as your user. That's Ubuntu's default
+  "user private groups" behavior: every new user silently gets a
+  same-named group as their primary one.
+- **`groups=...`** — the *full* list: your primary group plus every
+  extra group you belong to. Each one grants access to something
+  specific — `sudo` is the important one (it's literally what allows
+  you to run `sudo` at all — configured in `/etc/sudoers`); `docker`
+  is the one added earlier in this project so you don't need `sudo`
+  for Docker commands; `adm`, `cdrom`, `dip`, `lxd` are mostly Ubuntu
+  defaults you're not actively using. This connects directly to
+  Day 2 — group membership is exactly what gets checked whenever the
+  system decides if you're allowed to read/write/execute something.
+  `id` shows you the keys you're holding; a permissions check is the
+  system testing whether one of your keys fits the lock.
+
+`history`'s numbers (e.g. `123  id`) are just a running count of
+commands typed this session — not meaningful on their own, but you can
+rerun a specific one with `!123` instead of retyping it.
 
 **🌍 In the real world:** `man` pages have existed since Unix's first
 release in 1971 — even senior engineers reach for `man <cmd>` or a
@@ -300,6 +336,14 @@ wiping existing memberships (`-G` without `-a` would wipe them — a
 classic mistake). This is the exact pattern used to add `ubuntu` to the
 `docker` group earlier in this project.
 
+**Decode it:** this reads exactly like your own `id` output from Day 1
+— `trainee`'s primary group (`gid`) is its own private group (Ubuntu's
+default behavior for every new user), and `groups` lists that primary
+group plus every extra one it's in. Your actual uid number for
+`trainee` will just be "next available" on this box, so it may not
+match the example above exactly — that's normal, the *shape* of the
+output is what matters, same as every day in this course.
+
 **🌍 In the real world:** mismanaged group/permission grants are a
 recurring theme in real intrusions and internal data leaks — someone
 gets added to a group "just for now" that never gets revoked, or a
@@ -334,6 +378,16 @@ background jobs from *this shell*; `ps aux` lists *everything* on the
 system. `%1` refers to job number 1 from `jobs` — `kill` also accepts a
 raw PID. `kill` asks nicely by default; `kill -9` forces it, for when a
 process won't respond to the polite request.
+
+**Decode it — `ps aux`'s columns, left to right:** `USER` (who owns the
+process), `PID` (its unique ID — this is what `kill` targets), `%CPU`
+/ `%MEM` (current resource usage), `VSZ`/`RSS` (memory size details,
+rarely needed day to day), `TTY` (which terminal it's attached to, or
+`?` if none), `STAT` (state — `S` sleeping, `R` running, `Z` a "zombie"
+that's finished but not yet cleaned up), `START` (when it began), `TIME`
+(actual CPU time used, not wall-clock time), and finally `COMMAND` —
+the actual command line that started it, which is usually what you're
+scanning for.
 
 **🌍 In the real world:** Knight Capital's infamous 2012 trading
 incident — a $440M loss in 45 minutes — was partly caused by an old
@@ -717,6 +771,18 @@ are independent facts — confusing them causes real "but it worked
 yesterday!" bugs. `journalctl -u <service>` filters logs to just one
 service.
 
+**Decode it — `systemctl status docker`'s key lines:** the `●` symbol
+at the top is a quick health indicator (green/filled = fine, red = a
+problem). `Loaded:` shows where its unit file lives and whether it's
+`enabled`. `Active: active (running) since ...` is the line to check
+first — it tells you both *whether* it's up and *how long* it's been
+up (a service that restarted 30 seconds ago after running fine for
+weeks is a strong clue something just went wrong). `Main PID:` links
+it back to the `ps aux`/`PID` concept from Day 6 — a service is, under
+the hood, just a process systemd is supervising. Below that, a handful
+of the most recent log lines are shown inline, so you often don't even
+need `journalctl` separately for a quick check.
+
 **🌍 In the real world:** systemd became the default init system across
 nearly every major Linux distribution by the mid-2010s (not without
 controversy) specifically because "is my service actually running, and
@@ -883,6 +949,23 @@ private IP you see in `ip addr`. `ss -tulpn` is the exact command used
 early in this project to work out what the pre-existing `vpn-server`
 box was running, just from its open ports. `dig` shows the name→IP
 lookup that happens *before* any connection.
+
+**Decode it:**
+- **`ip addr`** — look for `ens3` (or similar): `inet 10.0.0.x/24` is
+  this machine's own private IP and subnet size. `lo` is the
+  "loopback" interface, always `127.0.0.1` — a machine's way of
+  talking to itself, used constantly by services on the same box.
+- **`ss -tulpn`** columns: `Netid` (`tcp` or `udp`), `State`
+  (`LISTEN` = accepting connections), `Local Address:Port` — this is
+  the one to actually read: `0.0.0.0:22` means "listening on port 22,
+  on *every* network interface"; `127.0.0.1:6010` means "only reachable
+  from this machine itself," a meaningfully different (and safer)
+  scope. `Process` at the end names exactly which program owns that
+  port — the same `PID`/`COMMAND` idea from Day 6's `ps aux`.
+- **`dig`'s `ANSWER SECTION`** — the line under this heading is the
+  actual result: domain name, a TTL (how long that answer can be
+  cached, in seconds), record type (`A` = IPv4 address), and the IP
+  itself.
 
 **🌍 In the real world:** the 2021 global outage that took down
 Facebook, Instagram, and WhatsApp simultaneously was ultimately a
@@ -1202,6 +1285,16 @@ internet scans every SSH-facing IP constantly, this is normal).
 very start of this project to work out when the two pre-existing
 Oracle instances were created and last used. Every serious "what
 happened here" investigation starts with logs, not guessing.
+
+**Decode it — a `last -x` line like
+`ubuntu pts/0  84.203.114.183  Fri Aug 8 19:58 - 22:58 (02:59)`:**
+username, then `pts/0` (which terminal session — `pts` means a
+"pseudo-terminal," i.e. an SSH/remote session, as opposed to `tty`
+which would mean someone physically at the machine), then the IP they
+connected *from*, then the login time, logout time, and total session
+duration in parentheses. Lines starting with `reboot` or `runlevel`
+aren't logins at all — they're the system itself recording a restart,
+useful for spotting exactly when this box last rebooted.
 
 **🌍 In the real world:** major breaches — the 2013 Target breach among
 them — are very often *detected* well after the fact, purely through
