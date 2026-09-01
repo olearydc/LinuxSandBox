@@ -5,14 +5,38 @@ actually works, reset whenever you like.
 
 ## Connecting
 
+**IP address:** `143.47.240.110` (also reachable as `linux-sandbox` if
+that hostname is in your local SSH config/MobaXterm session — the raw
+IP always works).
+
+### From your usual machine (has the SSH key)
+
 ```
 ssh -i ~/.ssh/sandbox_oracle ubuntu@143.47.240.110
 ```
 
 (Or just use your existing MobaXterm saved session — same box.)
 
-You'll see a `neofetch` system summary on login, and your prompt will
-say `ubuntu@linux-sandbox`.
+### From a different device (no key on it)
+
+Password login is available as a fallback for exactly this case — same
+username, no `-i` flag, just:
+
+```
+ssh ubuntu@143.47.240.110
+```
+
+It'll prompt for the `ubuntu` account password (typed on the device
+you're connecting *from* — nothing to type or share here in chat).
+This only works while password auth is deliberately turned on — it's
+off by default for security, since this box has a public IP. If it's
+off when you try this, come back to a Claude session in this project
+and ask to turn it on (and set/reset the account password yourself,
+directly on the box, over an existing session — never share it in
+chat). Turn it back off again once you're done, same way.
+
+Either way, you'll see a `neofetch` system summary on login, and your
+prompt will say `ubuntu@linux-sandbox`.
 
 ## Resetting things — two levels
 

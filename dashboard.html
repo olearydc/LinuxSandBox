@@ -323,8 +323,11 @@
     <p class="tagline">Hub for the personal Linux practice box: everything you need to connect, reset, and work through the 29-day course.</p>
   </div>
   <div class="quickconn">
-    <div class="label">Connect</div>
+    <div class="label">Connect &middot; usual machine</div>
     <code>ssh -i ~/.ssh/sandbox_oracle ubuntu@143.47.240.110</code>
+    <div class="label" style="margin-top:10px;">Connect &middot; new device, no key</div>
+    <code>ssh ubuntu@143.47.240.110</code>
+    <div style="font-size:11.5px; color:var(--muted); margin-top:8px;">Password login is off by default (public IP). Ask a Claude session to enable it before trying this — see USE_ME.md.</div>
   </div>
 </header>
 
