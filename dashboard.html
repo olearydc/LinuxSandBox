@@ -1,0 +1,528 @@
+<!doctype html>
+<title>Sandbox Console</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f1e7;
+    --bg-raised: #fbf8f1;
+    --ink: #23201b;
+    --muted: #6f6656;
+    --line: #ded5c3;
+    --accent: #b8511a;
+    --accent-ink: #fff8ef;
+    --ok: #2b6e63;
+    --ok-bg: #e2ede9;
+    --pending: #8a7f66;
+    --pending-bg: #eee7d6;
+    --shadow: rgba(35, 32, 27, 0.08);
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17140f;
+      --bg-raised: #1f1b14;
+      --ink: #ede6d6;
+      --muted: #a69c86;
+      --line: #332d22;
+      --accent: #e8823c;
+      --accent-ink: #1a1108;
+      --ok: #63b6a6;
+      --ok-bg: #1c2b27;
+      --pending: #a69c86;
+      --pending-bg: #2a2519;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17140f;
+    --bg-raised: #1f1b14;
+    --ink: #ede6d6;
+    --muted: #a69c86;
+    --line: #332d22;
+    --accent: #e8823c;
+    --accent-ink: #1a1108;
+    --ok: #63b6a6;
+    --ok-bg: #1c2b27;
+    --pending: #a69c86;
+    --pending-bg: #2a2519;
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+  }
+  a { color: inherit; }
+  code, .mono { font-family: var(--font-mono); }
+
+  /* ---------- header ---------- */
+  header.top {
+    border-bottom: 1px solid var(--line);
+    padding: 28px clamp(16px, 4vw, 48px) 22px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px var(--ok-bg); }
+  h1 {
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 36px);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .tagline { margin: 6px 0 0; color: var(--muted); max-width: 52ch; }
+
+  .quickconn {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-width: 300px;
+    box-shadow: 0 1px 2px var(--shadow);
+  }
+  .quickconn .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .quickconn code {
+    display: block;
+    font-size: 12.5px;
+    overflow-x: auto;
+    white-space: pre;
+    padding-bottom: 2px;
+  }
+
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 36px clamp(16px, 4vw, 48px) 80px;
+  }
+
+  section { margin-top: 44px; }
+  section:first-child { margin-top: 0; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .section-head h2 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+  .section-head .hint { font-size: 13px; color: var(--muted); }
+
+  /* ---------- doc cards ---------- */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .doc-card {
+    display: block;
+    text-decoration: none;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .doc-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .doc-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .doc-card .kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .doc-card h3 { margin: 0 0 6px; font-size: 16px; }
+  .doc-card p { margin: 0; font-size: 13px; color: var(--muted); }
+
+  /* ---------- open items ---------- */
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .items li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+  .items .tag {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: var(--pending-bg);
+    color: var(--pending);
+    margin-top: 1px;
+  }
+
+  /* ---------- progress ---------- */
+  .progress-wrap {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .progress-bar {
+    flex: 1 1 220px;
+    height: 10px;
+    border-radius: 6px;
+    background: var(--pending-bg);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--ok);
+    width: 0%;
+    transition: width .25s ease;
+  }
+  .progress-num { font-family: var(--font-mono); font-size: 14px; white-space: nowrap; }
+  .progress-note { font-size: 12.5px; color: var(--muted); flex-basis: 100%; }
+
+  /* ---------- weeks / days ---------- */
+  .week {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  .week summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    user-select: none;
+  }
+  .week summary::-webkit-details-marker { display: none; }
+  .week summary .chevron {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    transition: transform .15s ease;
+    flex: none;
+  }
+  .week[open] summary .chevron { transform: rotate(90deg); }
+  .week summary .wk-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    flex: none;
+  }
+  .week summary .wk-title { font-weight: 600; flex: 1; }
+  .week summary .wk-count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    flex: none;
+  }
+  .day-list { border-top: 1px solid var(--line); }
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px 10px 40px;
+    font-size: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .day-row:first-child { border-top: none; }
+  .day-row input[type="checkbox"] {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--ok);
+  }
+  .day-row .day-num { font-family: var(--font-mono); color: var(--muted); flex: none; width: 3.2em; }
+  .day-row .day-title { flex: 1; }
+  .day-row.done .day-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    flex: none;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 20px clamp(16px, 4vw, 48px) 40px;
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<header class="top">
+  <div>
+    <div class="brand-row"><span class="dot"></span> linux-sandbox &middot; ubuntu@143.47.240.110</div>
+    <h1>Sandbox Console</h1>
+    <p class="tagline">Hub for the personal Linux practice box: everything you need to connect, reset, and work through the 29-day course.</p>
+  </div>
+  <div class="quickconn">
+    <div class="label">Connect</div>
+    <code>ssh -i ~/.ssh/sandbox_oracle ubuntu@143.47.240.110</code>
+  </div>
+</header>
+
+<main>
+  <section id="progress">
+    <div class="section-head">
+      <h2>Course progress</h2>
+      <span class="hint">tracked in this browser only</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-num" id="progressNum">0 / 29 days</div>
+      <div class="progress-note">This checklist lives in <code>localStorage</code> for quick reference on this device only. The real source of truth is <code>~/training/course.sh status</code> on the instance itself.</div>
+    </div>
+  </section>
+
+  <section id="docs">
+    <div class="section-head">
+      <h2>Documentation</h2>
+    </div>
+    <div class="doc-grid">
+      <a class="doc-card" href="USE_ME.md">
+        <div class="kicker">Start here</div>
+        <h3>USE_ME.md</h3>
+        <p>Connecting, Docker resets, byobu, and how the course tracker works.</p>
+      </a>
+      <a class="doc-card" href="LEARNING.md">
+        <div class="kicker">Curriculum</div>
+        <h3>LEARNING.md</h3>
+        <p>The full 9-week, 29-day course — every command, output, and explanation.</p>
+      </a>
+      <a class="doc-card" href="training/course_reference.html">
+        <div class="kicker">Browsable</div>
+        <h3>Course reference</h3>
+        <p>Interactive HTML companion: collapsible days, roadmap, flag cheatsheet.</p>
+      </a>
+      <a class="doc-card" href="GLOSSARY.md">
+        <div class="kicker">Lookup</div>
+        <h3>GLOSSARY.md</h3>
+        <p>Every term introduced in the course, organized by week.</p>
+      </a>
+      <a class="doc-card" href="HANDOVER.md">
+        <div class="kicker">If it breaks</div>
+        <h3>HANDOVER.md</h3>
+        <p>Disaster-recovery runbook — read this first if the instance is ever gone.</p>
+      </a>
+      <a class="doc-card" href="provision.sh">
+        <div class="kicker">Setup</div>
+        <h3>provision.sh</h3>
+        <p>The idempotent script that provisions a fresh instance from scratch.</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="open-items">
+    <div class="section-head">
+      <h2>What's outstanding</h2>
+    </div>
+    <ul class="items">
+      <li><span class="tag">exploratory</span> Self-hosted VPN (WireGuard) — secondary interest once the course itself is further along; also the subject of Day 27's capstone. Not committed to yet.</li>
+      <li><span class="tag">cosmetic</span> Oracle Cloud console still shows the old display name <code>instance-20250913-2240</code> — rename via the OCI web console whenever convenient.</li>
+      <li><span class="tag">ongoing</span> Log in occasionally — Oracle has a history of reclaiming idle "Always Free" instances.</li>
+    </ul>
+  </section>
+
+  <section id="plan">
+    <div class="section-head">
+      <h2>Training plan</h2>
+      <span class="hint">check off as you go — click a week to expand</span>
+    </div>
+    <div id="weeks"></div>
+  </section>
+</main>
+
+<footer>
+  Repo: <a href="https://github.com/olearydc/LinuxSandBox">github.com/olearydc/LinuxSandBox</a> &middot;
+  No deadline on any of this — 1 day a week is a stated acceptable pace, not a fallback.
+</footer>
+
+<script>
+  const COURSE = [
+    { week: 1, title: "Shell Foundations", days: [
+      { n: 1, t: "Finding your way around", host: false },
+      { n: 2, t: "Files, permissions, ownership", host: false },
+      { n: 3, t: "Text editors: nano and vim", host: false },
+      { n: 4, t: "Environment variables and $PATH", host: true },
+    ]},
+    { week: 2, title: "Multi-User Linux", days: [
+      { n: 5, t: "Users and groups", host: true },
+      { n: 6, t: "Processes", host: false },
+      { n: 7, t: "Installing software", host: true },
+    ]},
+    { week: 3, title: "Text Wrangling & Automation", days: [
+      { n: 8, t: "Pipes, grep, and find", host: false },
+      { n: 9, t: "Regex basics with grep and sed", host: false },
+      { n: 10, t: "Shell scripting basics", host: false },
+      { n: 11, t: "Bash error handling: set -e and trap", host: true },
+      { n: 12, t: "Scheduling with cron", host: true },
+    ]},
+    { week: 4, title: "Version Control & Services", days: [
+      { n: 13, t: "Git basics", host: true },
+      { n: 14, t: "systemd and services", host: true },
+      { n: 15, t: "Write your own systemd service", host: true },
+      { n: 16, t: "Backups: tar and rsync", host: true },
+    ]},
+    { week: 5, title: "Networking", days: [
+      { n: 17, t: "Networking basics", host: true },
+      { n: 18, t: "Firewall", host: true },
+    ]},
+    { week: 6, title: "Docker Deep Dive", days: [
+      { n: 19, t: "Building your own images", host: false },
+      { n: 20, t: "Volumes and networks", host: false },
+      { n: 21, t: "Docker Compose: multi-container apps", host: true },
+    ]},
+    { week: 7, title: "Security", days: [
+      { n: 22, t: "SSH and basic hardening", host: true },
+      { n: 23, t: "fail2ban: automated intrusion protection", host: true },
+      { n: 24, t: "Reading the trail: logs and auditing", host: true },
+    ]},
+    { week: 8, title: "Guru Capstones", days: [
+      { n: 25, t: "Mini investigation", host: false },
+      { n: 26, t: "Capstone: deploy a real service", host: true },
+      { n: 27, t: "Capstone: WireGuard VPN", host: true },
+      { n: 28, t: "Capstone: tie it all together", host: false },
+    ]},
+    { week: 9, title: "Final Skills Test", days: [
+      { n: 29, t: "One platform, no hand-holding", host: false },
+    ]},
+  ];
+
+  const TOTAL_DAYS = COURSE.reduce((sum, w) => sum + w.days.length, 0);
+  const STORE_KEY = "sandbox-console-progress-v1";
+
+  function loadDone() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(STORE_KEY) || "[]"));
+    } catch (e) { return new Set(); }
+  }
+  function saveDone(set) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify([...set])); } catch (e) {}
+  }
+
+  const done = loadDone();
+  const weeksEl = document.getElementById("weeks");
+
+  COURSE.forEach((wk, idx) => {
+    const details = document.createElement("details");
+    details.className = "week";
+    if (idx === 0) details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.innerHTML = `
+      <span class="chevron">&#9656;</span>
+      <span class="wk-num">WEEK ${wk.week}</span>
+      <span class="wk-title">${wk.title}</span>
+      <span class="wk-count" data-wkcount="${wk.week}"></span>
+    `;
+    details.appendChild(summary);
+
+    const list = document.createElement("div");
+    list.className = "day-list";
+
+    wk.days.forEach(d => {
+      const row = document.createElement("label");
+      row.className = "day-row" + (done.has(d.n) ? " done" : "");
+      row.innerHTML = `
+        <input type="checkbox" data-day="${d.n}" ${done.has(d.n) ? "checked" : ""}>
+        <span class="day-num">Day ${d.n}</span>
+        <span class="day-title">${d.t}</span>
+        <span class="chip">${d.host ? "host" : "container"}</span>
+      `;
+      list.appendChild(row);
+    });
+
+    details.appendChild(list);
+    weeksEl.appendChild(details);
+  });
+
+  function refreshCounts() {
+    COURSE.forEach(wk => {
+      const doneInWeek = wk.days.filter(d => done.has(d.n)).length;
+      const el = document.querySelector(`[data-wkcount="${wk.week}"]`);
+      if (el) el.textContent = `${doneInWeek}/${wk.days.length}`;
+    });
+    const total = done.size;
+    document.getElementById("progressNum").textContent = `${total} / ${TOTAL_DAYS} days`;
+    document.getElementById("progressFill").style.width = `${(total / TOTAL_DAYS) * 100}%`;
+  }
+
+  weeksEl.addEventListener("change", (e) => {
+    const box = e.target;
+    if (box.tagName !== "INPUT") return;
+    const n = Number(box.dataset.day);
+    if (box.checked) done.add(n); else done.delete(n);
+    box.closest(".day-row").classList.toggle("done", box.checked);
+    saveDone(done);
+    refreshCounts();
+  });
+
+  refreshCounts();
+</script>
